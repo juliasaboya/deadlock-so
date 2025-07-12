@@ -11,7 +11,7 @@ import SwiftUI
 struct deadlock_soApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SimulationView()
         }
     }
 }
