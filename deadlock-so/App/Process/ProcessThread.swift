@@ -10,7 +10,7 @@
 
 import Foundation
 
-class ProcessThread {
+class ProcessThread: Thread {
     let id: Int
     let requestInterval: TimeInterval
     let usageInterval: TimeInterval
@@ -26,7 +26,7 @@ class ProcessThread {
 
     }
 
-    func start() {
+    override func start() {
         DispatchQueue.global().async {
             while self.isRunning {
                 self.cpuBound(seconds: self.requestInterval)
