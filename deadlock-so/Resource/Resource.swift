@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Resource {
+class Resource: Identifiable {
     let name: String
     let id: Int
     let totalInstances: Int
