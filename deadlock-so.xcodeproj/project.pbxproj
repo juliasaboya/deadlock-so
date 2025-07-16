@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		82CC01C22E25F70B00165CC7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 827A80C92E15946600AEC061 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 827A80D02E15946600AEC061;
+			remoteInfo = "deadlock-so";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		827A80D12E15946600AEC061 /* deadlock-so.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "deadlock-so.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		82CC01BE2E25F70B00165CC7 /* deadlock-soTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "deadlock-soTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +27,22 @@
 			path = "deadlock-so";
 			sourceTree = "<group>";
 		};
+		82CC01BF2E25F70B00165CC7 /* deadlock-soTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "deadlock-soTests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		827A80CE2E15946600AEC061 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82CC01BB2E25F70B00165CC7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				827A80D32E15946600AEC061 /* deadlock-so */,
+				82CC01BF2E25F70B00165CC7 /* deadlock-soTests */,
 				827A80D22E15946600AEC061 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				827A80D12E15946600AEC061 /* deadlock-so.app */,
+				82CC01BE2E25F70B00165CC7 /* deadlock-soTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +95,29 @@
 			productReference = 827A80D12E15946600AEC061 /* deadlock-so.app */;
 			productType = "com.apple.product-type.application";
 		};
+		82CC01BD2E25F70B00165CC7 /* deadlock-soTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82CC01C42E25F70B00165CC7 /* Build configuration list for PBXNativeTarget "deadlock-soTests" */;
+			buildPhases = (
+				82CC01BA2E25F70B00165CC7 /* Sources */,
+				82CC01BB2E25F70B00165CC7 /* Frameworks */,
+				82CC01BC2E25F70B00165CC7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				82CC01C32E25F70B00165CC7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				82CC01BF2E25F70B00165CC7 /* deadlock-soTests */,
+			);
+			name = "deadlock-soTests";
+			packageProductDependencies = (
+			);
+			productName = "deadlock-soTests";
+			productReference = 82CC01BE2E25F70B00165CC7 /* deadlock-soTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -82,6 +130,10 @@
 				TargetAttributes = {
 					827A80D02E15946600AEC061 = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					82CC01BD2E25F70B00165CC7 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 827A80D02E15946600AEC061;
 					};
 				};
 			};
@@ -100,12 +152,20 @@
 			projectRoot = "";
 			targets = (
 				827A80D02E15946600AEC061 /* deadlock-so */,
+				82CC01BD2E25F70B00165CC7 /* deadlock-soTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		827A80CF2E15946600AEC061 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82CC01BC2E25F70B00165CC7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +182,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		82CC01BA2E25F70B00165CC7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		82CC01C32E25F70B00165CC7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 827A80D02E15946600AEC061 /* deadlock-so */;
+			targetProxy = 82CC01C22E25F70B00165CC7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		827A80DE2E15946700AEC061 /* Debug */ = {
@@ -297,6 +372,40 @@
 			};
 			name = Release;
 		};
+		82CC01C52E25F70B00165CC7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X522HZ3Q82;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "JSaboya.deadlock-soTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/deadlock-so.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/deadlock-so";
+			};
+			name = Debug;
+		};
+		82CC01C62E25F70B00165CC7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X522HZ3Q82;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "JSaboya.deadlock-soTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/deadlock-so.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/deadlock-so";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -314,6 +423,15 @@
 			buildConfigurations = (
 				827A80E12E15946700AEC061 /* Debug */,
 				827A80E22E15946700AEC061 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		82CC01C42E25F70B00165CC7 /* Build configuration list for PBXNativeTarget "deadlock-soTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82CC01C52E25F70B00165CC7 /* Debug */,
+				82CC01C62E25F70B00165CC7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
