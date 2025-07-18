@@ -43,12 +43,12 @@ class ProcessThread: Thread {
         guard let resource = allResources.randomElement() else { return }
         print("[Process \(id)] Solicitando recurso \(resource.name)...")
 
-        resource.requestAccess(processId: id)
+//        resource.requestAccess(processId: id)
         print("[Process \(id)] Obteve recurso \(resource.name), utilizando por \(usageInterval)s...")
 
         useResource()
 
-        resource.releaseAccess(processId: id)
+//        resource.releaseAccess(processId: id)
         print("[Process \(id)] Liberou recurso \(resource.name)")
     }
 

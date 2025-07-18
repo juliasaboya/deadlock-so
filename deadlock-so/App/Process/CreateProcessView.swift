@@ -10,7 +10,7 @@ import SwiftUI
 struct CreateProcessView: View {
     @Environment(\.dismiss) var dismiss
     
-    @ObservedObject var deadlockVM: DeadlockVM
+    @ObservedObject var simulationVM: SimulationViewModel
     
     @State private var processID: String = ""
     @State private var intervalRequest: String = ""
@@ -42,7 +42,7 @@ struct CreateProcessView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Salvar") {
-                    deadlockVM.process.append(ProcessMock(id: Int(processID)!, intervalRequest: Int(intervalRequest)!, intervalUse: Int(intervalRequest)!))
+                    simulationVM.process.append(ProcessMock(id: Int(processID)!, intervalRequest: Int(intervalRequest)!, intervalUse: Int(intervalRequest)!))
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
@@ -53,5 +53,5 @@ struct CreateProcessView: View {
 }
 
 #Preview {
-    CreateProcessView(deadlockVM: DeadlockVM())
+//    CreateProcessView(simulationVM: SimulationViewModel())
 }

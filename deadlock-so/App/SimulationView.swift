@@ -8,24 +8,22 @@
 import SwiftUI
 
 struct SimulationView: View {
-    @ObservedObject var deadlockVM: DeadlockVM
     
+    @ObservedObject var simulationVM: SimulationViewModel
     @State var evenResources: [Resource] = []
     @State var oddResources: [Resource] = []
-    let rows = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
+    let rows = Array(repeating: GridItem(.flexible()), count: 3)
     
-    @State private var createSOSheet: Bool = false
-    @State private var createProcess: Bool = false
+    init(parameters: SimulationParameters) {
+        self.simulationVM = .init(parameters: parameters)
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                if !deadlockVM.isSOCreated {
+                if !simulationVM.isSOCreated {
                     Button {
-                        createSOSheet = true
+                        simulationVM.createSOSheet = true
                     } label: {
                         Text("Criar sistema operacional")
                             .font(.headline)
@@ -42,7 +40,7 @@ struct SimulationView: View {
                             
                             HStack {
                                 Spacer()
-                                ForEach(deadlockVM.process) { process in
+                                ForEach(simulationVM.process) { process in
                                     Circle()
                                         .frame(width: 100, height: 100)
                                         .foregroundStyle(.red)
@@ -59,7 +57,7 @@ struct SimulationView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                         .padding(.top)
                         Button {
-                            createProcess = true
+                            simulationVM.createProcess = true
                         } label: {
                             Text("Criar processo")
                                 .font(.headline)
@@ -68,14 +66,14 @@ struct SimulationView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                         .padding(.top)
                         Button {
-                            deadlockVM.logs.append(LogEntry(message: "Impressora solicitou uma instância do recurso Impressora!"))
+                            simulationVM.logs.append(LogEntry(message: "Impressora solicitou uma instância do recurso Impressora!"))
                         } label: {
                             Text("Criar fake log")
                                 .font(.headline)
                         }
                         .buttonStyle(.borderedProminent)
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                        LogView(size: geometry.size, deadlockVM: deadlockVM)
+                        LogView(size: geometry.size, simulationVM: simulationVM)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                         
                     }
@@ -83,20 +81,20 @@ struct SimulationView: View {
             }
             .background(Color.blue)
             .frame(width: geometry.size.width, height: geometry.size.height)
-            .sheet(isPresented: $createSOSheet) {
-                CreateOSView(deadlockVM: deadlockVM)
+            .sheet(isPresented: $simulationVM.createSOSheet) {
+                CreateOSView(simulationVM: simulationVM)
             }
-            .sheet(isPresented: $createProcess) {
-                CreateProcessView(deadlockVM: deadlockVM)
+            .sheet(isPresented: $simulationVM.createProcess) {
+                CreateProcessView(simulationVM: simulationVM)
             }
             .onAppear {
-                evenResources = deadlockVM.resources.enumerated().filter {$0.offset % 2 == 0 }.map { $0.element }
-                oddResources = deadlockVM.resources.enumerated().filter { $0.offset % 2 != 0 }.map { $0.element }
+                evenResources = simulationVM.resources.enumerated().filter {$0.offset % 2 == 0 }.map { $0.element }
+                oddResources = simulationVM.resources.enumerated().filter { $0.offset % 2 != 0 }.map { $0.element }
             }
         }
     }
 }
 
 #Preview {
-    SimulationView(deadlockVM: DeadlockVM())
+    SimulationView(parameters: SimulationParameters(resources: [], deltaT: 0))
 }

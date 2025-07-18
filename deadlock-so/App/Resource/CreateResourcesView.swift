@@ -7,16 +7,24 @@
 
 import SwiftUI
 
+struct SimulationParameters: Hashable, Equatable, Identifiable {
+    let id = UUID()
+    var resources: [Resource]
+    var deltaT: TimeInterval
+}
+
 struct CreateResourcesView: View {
-    @ObservedObject var deadlockVM: DeadlockVM = DeadlockVM()
+    @State var parameters = SimulationParameters(resources: [], deltaT: 0)
     
     @State private var resourceName: String = ""
     @State private var resourceID: String = ""
     @State private var resourceInstances: String = ""
     
+    @State private var path = NavigationPath()
+    
     @State private var navegar = false
     var body: some View {
-        NavigationStack {
+        NavigationStack (path: $path){
             HStack {
                 VStack {
                     Text("Lista de recursos:")
@@ -25,7 +33,7 @@ struct CreateResourcesView: View {
                         .padding()
                     ScrollView(.vertical) {
                         VStack(alignment: .leading, spacing: 5) {
-                            ForEach(deadlockVM.resources) { resource in
+                            ForEach(parameters.resources) { resource in
                                 Text("\(resource.name) (ID: \(resource.id))")
                                     .bold()
                                 Text("Quantidade de instâncias: \(resource.totalInstances)")
@@ -55,7 +63,7 @@ struct CreateResourcesView: View {
                         TextField("Ex: 2", text: $resourceInstances)
                     }
                     Button {
-                        deadlockVM.resources.append(Resource(name: resourceName, id: Int(resourceID)!, quantity: Int(resourceInstances)!))
+                        parameters.resources.append(Resource(name: resourceName, id: Int(resourceID)!, quantity: Int(resourceInstances)!))
                         print("recurso adicionado !")
                         resourceID = ""
                         resourceName = ""
@@ -72,14 +80,18 @@ struct CreateResourcesView: View {
             }
             .padding([.top, .leading, .trailing], 16)
             Button {
-                navegar = true
+//                navegar = true
+                path.append(parameters)
             } label: {
                 Text("Continuar")
             }
             .padding([.bottom, .top], 10)
-            .disabled(deadlockVM.resources.isEmpty)
-            .navigationDestination(isPresented: $navegar) {
-                SimulationView(deadlockVM: deadlockVM)
+            .disabled(parameters.resources.isEmpty)
+//            .navigationDestination(isPresented: $navegar) {
+//                SimulationView(deadlockVM: deadlockVM)
+//            }
+            .navigationDestination(for: SimulationParameters.self) { parameters in
+                SimulationView(parameters: parameters)
             }
         }
     }
