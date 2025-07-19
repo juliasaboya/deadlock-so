@@ -15,18 +15,19 @@ class SimulationViewModel: ObservableObject {
     @Published var createSOSheet: Bool = false
     @Published var createProcess: Bool = false
     
-    var existingResources: [Int] = []
-    var allocatedResources: [[Int]] = []
-    var requestedResources: [[Int]] = []
-    var availableResources: [DispatchSemaphore] = []
+    @Published var existingResources: [Int] = []
+    @Published var allocatedResources: [[Int]] = []
+    @Published var requestedResources: [[Int]] = []
+    @Published var availableResources: [ResourceSemaphore] = []
     
     init(parameters: SimulationParameters) {
         resources = parameters.resources
         parameters.resources.forEach { resource in
             self.existingResources.append(resource.totalInstances)
-            self.availableResources.append(DispatchSemaphore(value: resource.totalInstances))
+            self.availableResources.append(ResourceSemaphore(value: resource.totalInstances))
         }
-        
+        let operatingSystem = OperatingSystem(simulationVM: self)
+        operatingSystem.start()
     }
 }
 
