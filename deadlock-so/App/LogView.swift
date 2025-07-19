@@ -14,7 +14,7 @@ struct LogEntry: Identifiable, Hashable {
 
 struct LogView: View {
     let size: CGSize
-    @ObservedObject var deadlockVM: DeadlockVM
+    @ObservedObject var simulationVM: SimulationViewModel
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -25,7 +25,7 @@ struct LogView: View {
     
     var columnLogs: [[LogEntry]] {
         var result: [[LogEntry]] = Array(repeating: [], count: columnCount)
-        for (index, log) in deadlockVM.logs.prefix(columnCount * maxRows).enumerated() {
+        for (index, log) in simulationVM.logs.prefix(columnCount * maxRows).enumerated() {
             let column = index / maxRows
             if column < columnCount {
                 result[column].append(log)

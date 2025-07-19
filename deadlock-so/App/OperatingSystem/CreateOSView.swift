@@ -10,7 +10,7 @@ import SwiftUI
 struct CreateOSView: View {
     @Environment(\.dismiss) var dismiss
     
-    @ObservedObject var deadlockVM: DeadlockVM
+    @ObservedObject var simulationVM: SimulationViewModel
     @State private var interval: String = ""
     var body: some View {
         VStack(spacing: 20) {
@@ -32,7 +32,7 @@ struct CreateOSView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Salvar") {
-                    deadlockVM.isSOCreated = true
+                    simulationVM.isSOCreated = true
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
@@ -43,5 +43,4 @@ struct CreateOSView: View {
 }
 
 #Preview {
-    CreateOSView(deadlockVM: DeadlockVM())
 }
