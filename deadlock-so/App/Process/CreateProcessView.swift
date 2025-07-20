@@ -42,7 +42,9 @@ struct CreateProcessView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Salvar") {
-                    simulationVM.process.append(ProcessMock(id: Int(processID)!, intervalRequest: Int(intervalRequest)!, intervalUse: Int(intervalRequest)!))
+                    let process = ProcessMock(id: Int(processID)!, intervalRequest: TimeInterval(intervalRequest)!, intervalUse: TimeInterval(intervalUse)!, simulationVM: simulationVM)
+                    process.start()
+                    simulationVM.process.append(ProcessMock(id: Int(processID)!, intervalRequest: TimeInterval(intervalRequest)!, intervalUse: TimeInterval(intervalUse)!, simulationVM: simulationVM))
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
