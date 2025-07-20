@@ -80,16 +80,12 @@ struct CreateResourcesView: View {
             }
             .padding([.top, .leading, .trailing], 16)
             Button {
-//                navegar = true
                 path.append(parameters)
             } label: {
                 Text("Continuar")
             }
             .padding([.bottom, .top], 10)
             .disabled(parameters.resources.isEmpty)
-//            .navigationDestination(isPresented: $navegar) {
-//                SimulationView(deadlockVM: deadlockVM)
-//            }
             .navigationDestination(for: SimulationParameters.self) { parameters in
                 SimulationView(parameters: parameters)
             }
