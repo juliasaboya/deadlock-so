@@ -10,7 +10,8 @@ import Foundation
 class Resource: Identifiable, Hashable, Equatable {
     let name: String
     let id: Int
-    let totalInstances: Int
+//    let totalInstances: Int
+    var totalInstances: Int
 
     init(name: String, id: Int, quantity: Int) {
         self.name = name
