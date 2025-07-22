@@ -55,25 +55,34 @@ struct CreateResourcesView: View {
                         Text("Nome do recurso:")
                             .font(.headline)
                         TextField("Digite o nome do recurso", text: $resourceName)
-                        Text("Identificador do recurso:")
-                            .font(.headline)
-                        TextField("Ex: 1", text: $resourceID)
+
                         Text("Quantidade de instâncias do recurso:")
                             .font(.headline)
-                        TextField("Ex: 2", text: $resourceInstances)
+                        TextField("Ex: 2", text: Binding(
+                            get: { resourceInstances },
+                            set: { newValue in
+                                // Mantém apenas dígitos (0–9)
+                                let filtered = newValue.filter { $0.isNumber }
+                                resourceInstances = filtered
+                            }
+                        ))
                     }
+
                     Button {
-                        parameters.resources.append(Resource(name: resourceName, id: Int(resourceID)!, quantity: Int(resourceInstances)!))
-                        print("recurso adicionado !")
-                        resourceID = ""
-                        resourceName = ""
-                        resourceInstances = ""
+                        if let newID = generateNextID() {
+                            parameters.resources.append(Resource(name: resourceName, id: newID, quantity: Int(resourceInstances)!))
+                            print("Recurso adicionado com ID: \(newID)")
+                            resourceName = ""
+                            resourceInstances = ""
+                        } else {
+                            print("Todos os IDs de 0 a 9 já estão em uso.")
+                        }
                     } label: {
                         Text("Adicionar recurso")
                             .font(.headline)
                     }
                     .buttonStyle(.borderedProminent)
-                    .disabled(String(resourceName).isEmpty || Int(resourceID) == nil || Int(resourceInstances) == nil || Int(resourceID) ?? 0 <= 0 || Int(resourceInstances) ?? 0 <= 0)
+                    .disabled(resourceName.isEmpty || Int(resourceInstances) == nil || Int(resourceInstances)! <= 0 || generateNextID() == nil)
                 }
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -90,6 +99,11 @@ struct CreateResourcesView: View {
                 SimulationView(parameters: parameters)
             }
         }
+    }
+
+    private func generateNextID() -> Int? {
+        let usedIDs = parameters.resources.map { $0.id }
+        return (0...9).first { !usedIDs.contains($0) }
     }
 }
 
