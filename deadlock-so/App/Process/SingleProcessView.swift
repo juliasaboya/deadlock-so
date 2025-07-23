@@ -7,9 +7,10 @@
 
 import SwiftUI
 
+
 struct SingleProcessView: View {
     var process: ProcessThread
-    var processColor: Color {
+    var backgroundColor: Color {
         if process.isRunning {
             return .verdeProcessos
         }
@@ -19,8 +20,9 @@ struct SingleProcessView: View {
         Text("P\(process.id)")
             .font(.system(size: 28, weight: .bold))
             .frame(width: 80, height: 80)
-            .background(processColor)
+            .background(backgroundColor)
             .clipShape(Circle())
+            .dropLight(isOn: process.isRunning)
     }
 }
 
