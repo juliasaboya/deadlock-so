@@ -40,7 +40,7 @@ struct SimulationView: View {
                             
                             HStack {
                                 Spacer()
-                                ForEach(simulationVM.process) { process in
+                                ForEach(simulationVM.processes) { process in
                                     Circle()
                                         .frame(width: 100, height: 100)
                                         .foregroundStyle(.red)
