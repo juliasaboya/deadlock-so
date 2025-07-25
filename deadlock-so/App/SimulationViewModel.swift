@@ -29,8 +29,8 @@ class SimulationViewModel: ObservableObject {
         parameters.resources.forEach { resource in
             self.existingResources.append(resource.totalInstances)
             self.availableResources.append(ResourceSemaphore(value: resource.totalInstances))
-//            self.allocatedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
-//            self.requestedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
+            self.allocatedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
+            self.requestedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
         }
         let operatingSystem = OperatingSystem(simulationVM: self)
         operatingSystem.start()

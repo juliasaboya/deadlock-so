@@ -14,91 +14,83 @@ class ProcessThread: Thread, Identifiable {
     let id: Int
     let intervalRequest: TimeInterval
     let intervalUse: TimeInterval
-    var status: ProcessStatus = .aguardando
     var isRunning: Bool = true
     
+    var timer: Timer?
+    var timerUse: Timer?
+
     let simulationVM: SimulationViewModel
-    
+
     init(id: Int, intervalRequest: TimeInterval, intervalUse: TimeInterval, simulationVM: SimulationViewModel) {
         self.id = id
         self.intervalRequest = intervalRequest
         self.intervalUse = intervalUse
         self.simulationVM = simulationVM
     }
-    
+
     override func main() {
         Thread.current.name = "Process \(id)"
-        
-        while self.isRunning {
-            Thread.sleep(forTimeInterval: intervalRequest)
-            self.requestResourceAndUse()
-        }
+
+//        while isRunning {
+            timer = Timer.scheduledTimer(withTimeInterval: intervalRequest, repeats: true) { [weak self] _ in
+                        self?.requestResourceAndUse()
+            }
+//            Thread.sleep(forTimeInterval: intervalRequest)
+//
+//            guard let resource = simulationVM.resources.randomElement() else { continue }
+//
+//            requestResource(resource)
+//
+//            tryAllocate(resource)
+            RunLoop.current.add(timer!, forMode: .default)
+
+            // Inicia o run loop para manter a thread viva e escutando o timer
+            RunLoop.current.run()
+//        }
     }
-    
+
     func stop() {
         isRunning = false
     }
     
     private func requestResourceAndUse() {
-//        if status != .bloqueado {
-            guard let resource = simulationVM.resources.randomElement() else { return }
-            
-            requestResource(resource: resource)
-            
-            // Isso deve bloquear corretamente
-            tryAllocate(resource: resource)
-            
-//            DispatchQueue.global().async { [unowned self] in
-//                useResource(resource: resource)
-//            }
-            
-//        }
-//        if status != .bloqueado {
-//            guard let resource = simulationVM.resources.randomElement() else { return }
-//            requestResource(resource: resource)
-//            tryAllocate(resource: resource)
-//            DispatchQueue.global().async { [unowned self] in
-//                self.useResource(resource: resource)
-//            }
-//        }
+        guard let resource = simulationVM.resources.randomElement() else { return }
+        
+        requestResource(resource)
+        
+        tryAllocate(resource)
+        
+        useResource(resource)
     }
-    
-    private func requestResource(resource: Resource) {
+
+    private func requestResource(_ resource: Resource) {
         print("[Process \(id)] Solicitando recurso \(resource.name)...")
         if let processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id }) {
             simulationVM.requestedResources[processIndex][resource.id] += 1
         }
     }
-    
-    private func useResource(resource: Resource) {
-        Thread.sleep(forTimeInterval: intervalUse)
-//        DispatchQueue.main.async { [unowned self] in
-//            simulationVM.availableResources[resource.id].signal()
-//        }
-       
-        DispatchQueue.main.async { [unowned self] in
-            status = .aguardando
-            print("[Process \(id)] Liberou recurso \(resource.name)")
-//            simulationVM.allocatedResources[self.id][resource.id] -= 1
-        }
-    }
-    
-    
-    private func tryAllocate(resource: Resource) {
-        DispatchQueue.main.async { [unowned self] in
-////            status = .bloqueado
-            print("[Process \(id)] Bloqueado aguardando \(resource.name)...")
-        }
-        
+
+    private func tryAllocate(_ resource: Resource) {
+        print("[Process \(id)] Bloqueado aguardando \(resource.name)...")
+
         simulationVM.availableResources[resource.id].wait()
-        print("[Process \(id)] Obteve recurso \(resource.name), utilizando por \(intervalUse)s...")
-        useResource(resource: resource)
-//        DispatchQueue.main.async { [unowned self] in
-////            status = .usando
-////            simulationVM.requestedResources[self.id][resource.id] -= 1
-////            simulationVM.allocatedResources[self.id][resource.id] += 1
-            
-//        }
+
+        print("[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s")
+
+//        useResource(resource)
+    }
+
+    private func useResource(_ resource: Resource) {
+        timerUse = Timer.scheduledTimer(withTimeInterval: intervalUse, repeats: false) { [weak self] _ in
+            print("[Process \(self?.id ?? 0)] Liberou recurso \(resource.name)")
+            self?.simulationVM.availableResources[resource.id].signal()
+        }
+        // Libera o recurso após o tempo de uso, sem bloquear a thread principal
+        //        DispatchQueue.global().asyncAfter(deadline: .now() + intervalUse) { [weak self] in
+        //            guard let self = self else { return }
+        
+        
+        //        }
     }
     
     private func cpuBound(seconds: TimeInterval) {
