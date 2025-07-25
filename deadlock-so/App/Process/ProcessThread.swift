@@ -15,11 +15,11 @@ class ProcessThread: Thread, Identifiable {
     let intervalRequest: TimeInterval
     let intervalUse: TimeInterval
     var isRunning: Bool = true
-    
-    var timer: Timer?
-    var timerUse: Timer?
 
     let simulationVM: SimulationViewModel
+    
+    let spaceTime = TimeInterval(1)
+    var internalTime: Int = 0
 
     init(id: Int, intervalRequest: TimeInterval, intervalUse: TimeInterval, simulationVM: SimulationViewModel) {
         self.id = id
@@ -30,23 +30,27 @@ class ProcessThread: Thread, Identifiable {
 
     override func main() {
         Thread.current.name = "Process \(id)"
-
-//        while isRunning {
-            timer = Timer.scheduledTimer(withTimeInterval: intervalRequest, repeats: true) { [weak self] _ in
-                        self?.requestResourceAndUse()
+        while isRunning {
+            Thread.sleep(forTimeInterval: spaceTime)
+            internalTime += 1
+            if internalTime % Int(intervalRequest) == 0 {
+                // MARK: Ainda não verifica as instâncias
+                guard let resource = simulationVM.resources.randomElement() else { return }
+                // TODO: verificar numero de instancias
+                requestResource(resource)
+                tryAllocate(resource)
             }
-//            Thread.sleep(forTimeInterval: intervalRequest)
-//
-//            guard let resource = simulationVM.resources.randomElement() else { continue }
-//
-//            requestResource(resource)
-//
-//            tryAllocate(resource)
-            RunLoop.current.add(timer!, forMode: .default)
-
-            // Inicia o run loop para manter a thread viva e escutando o timer
-            RunLoop.current.run()
-//        }
+            
+            // MARK: outro if para tupla que verifica o tempo
+            /*
+             if internalTime == tupla[0][1] (?) {
+             
+                useResource(resource)
+             
+             }
+             */
+        }
+        
     }
 
     func stop() {
@@ -61,7 +65,7 @@ class ProcessThread: Thread, Identifiable {
 
         tryAllocate(resource)
         
-        useResource(resource)
+        
 
     }
 
@@ -75,9 +79,9 @@ class ProcessThread: Thread, Identifiable {
 
     private func tryAllocate(_ resource: Resource) {
         print("[Process \(id)] Bloqueado aguardando \(resource.name)...")
-
+        
         simulationVM.availableResources[resource.id].wait()
-
+        // TODO: O append é aqui
         print("[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s")
 
 //        useResource(resource)
