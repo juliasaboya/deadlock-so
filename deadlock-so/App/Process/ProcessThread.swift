@@ -15,11 +15,12 @@ class ProcessThread: Thread, Identifiable {
     let intervalRequest: TimeInterval
     let intervalUse: TimeInterval
     var isRunning: Bool = true
-    
-    var timer: Timer?
-    var timerUse: Timer?
+    var freeResourcesTimes: [(Date, Int)] = []
 
     let simulationVM: SimulationViewModel
+    
+    let spaceTime = TimeInterval(1)
+    var internalTime: Int = 0
 
     init(id: Int, intervalRequest: TimeInterval, intervalUse: TimeInterval, simulationVM: SimulationViewModel) {
         self.id = id
@@ -30,27 +31,86 @@ class ProcessThread: Thread, Identifiable {
 
     override func main() {
         Thread.current.name = "Process \(id)"
-
-//        while isRunning {
-            timer = Timer.scheduledTimer(withTimeInterval: intervalRequest, repeats: true) { [weak self] _ in
-                        self?.requestResourceAndUse()
+        while isRunning {
+            
+            Thread.sleep(forTimeInterval: spaceTime)
+            internalTime += 1
+            
+            if internalTime % Int(intervalRequest) == 0 {
+                
+                
+                useResource(requestResource())
             }
-//            Thread.sleep(forTimeInterval: intervalRequest)
-//
-//            guard let resource = simulationVM.resources.randomElement() else { continue }
-//
-//            requestResource(resource)
-//
-//            tryAllocate(resource)
-            RunLoop.current.add(timer!, forMode: .default)
-
-            // Inicia o run loop para manter a thread viva e escutando o timer
-            RunLoop.current.run()
-//        }
+            
+            // MARK: outro if para tupla que verifica o tempo
+            
+             if internalTime == tupla[0][1] (?) {
+             
+                freeResource(resource)
+             
+             }
+             
+        }
+        
     }
 
     func stop() {
         isRunning = false
+    }
+
+    private func requestResource() -> Resource {
+        resource = nil
+        if let resource = simulationVM.resources.randomElement() {
+            
+            print("[Process \(id)] Solicitando recurso \(resource.name)...")
+            if let processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id }) {
+                simulationVM.requestedResources[processIndex][resource.id] += 1
+                // TODO: append na tupla (tempo, recurso)
+                
+            }
+        }
+    }
+
+    private func useResource(_ resource: Resource) {
+        print("[Process \(id)] Bloqueado aguardando \(resource.name)...")
+        
+        simulationVM.availableResources[resource.id].wait()
+        
+        // TODO: O append é aqui
+        print("[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s")
+
+//        useResource(resource)
+    }
+    
+    private func freeResource(_ resource: Resource) {
+        print("[Process \(id)] Liberou recurso \(resource.name)")
+        simulationVM.availableResources[resource.id].signal()
+        //            // TODO: nesse momento dá um remove na lista de tuplas - momento da liberação, qual o recurso
+    }
+
+//    private func useResource(_ resource: Resource) {
+//        timerUse = Timer.scheduledTimer(withTimeInterval: intervalUse, repeats: false) { [weak self] _ in
+//            print("[Process \(self?.id ?? 0)] Liberou recurso \(resource.name)")
+//            self?.simulationVM.availableResources[resource.id].signal()
+    //            // TODO: tuplas N. (Tempo, recurso)
+
+//
+//        }
+//
+//        // Libera o recurso após o tempo de uso, sem bloquear a thread principal
+//        //        DispatchQueue.global().asyncAfter(deadline: .now() + intervalUse) { [weak self] in
+//        //            guard let self = self else { return }
+//        
+//        
+//        //        }
+//    }
+    
+    private func cpuBound(seconds: TimeInterval) {
+        let start = Date()
+        var x = 0.0
+        while Date().timeIntervalSince(start) < seconds {
+            x += sin(Double.random(in: 0..<Double.pi))
+        }
     }
     
     private func requestResourceAndUse() {
@@ -59,52 +119,7 @@ class ProcessThread: Thread, Identifiable {
         // TODO: verificar numero de instancias
         requestResource(resource)
 
-        tryAllocate(resource)
-        
         useResource(resource)
 
-    }
-
-    private func requestResource(_ resource: Resource) {
-        print("[Process \(id)] Solicitando recurso \(resource.name)...")
-        if let processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id }) {
-            simulationVM.requestedResources[processIndex][resource.id] += 1
-            // TODO: append na tupla (tempo, recurso)
-        }
-    }
-
-    private func tryAllocate(_ resource: Resource) {
-        print("[Process \(id)] Bloqueado aguardando \(resource.name)...")
-
-        simulationVM.availableResources[resource.id].wait()
-
-        print("[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s")
-
-//        useResource(resource)
-    }
-
-    private func useResource(_ resource: Resource) {
-        timerUse = Timer.scheduledTimer(withTimeInterval: intervalUse, repeats: false) { [weak self] _ in
-            print("[Process \(self?.id ?? 0)] Liberou recurso \(resource.name)")
-            self?.simulationVM.availableResources[resource.id].signal()
-            // TODO: nesse momento dá um remove na lista de tuplas - momento da liberação, qual o recurso
-            // TODO: tuplas N. (Tempo, recurso)
-
-        }
-
-        // Libera o recurso após o tempo de uso, sem bloquear a thread principal
-        //        DispatchQueue.global().asyncAfter(deadline: .now() + intervalUse) { [weak self] in
-        //            guard let self = self else { return }
-        
-        
-        //        }
-    }
-    
-    private func cpuBound(seconds: TimeInterval) {
-        let start = Date()
-        var x = 0.0
-        while Date().timeIntervalSince(start) < seconds {
-            x += sin(Double.random(in: 0..<Double.pi))
-        }
     }
 }
