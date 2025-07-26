@@ -9,48 +9,40 @@ import SwiftUI
 
 struct ResourceView: View {
     let resource: Resource
-    let rows: [GridItem]
     var body: some View {
-        VStack(spacing: 8) {
-            Text("\(resource.name) (ID: \(resource.id))")
-                .font(.headline)
+        VStack(spacing: 0) {
+            Text("\(resource.id): \(resource.name)")
+                .font(.system(size: 14))
+                .bold()
+                .foregroundStyle(.azulEscuro)
+                .frame(width: 150, height: 27)
+                .background(
+                    Gradient(colors: [.cinzaEscuroRecursoGrad,.azulClaro, .cinzaMedioRecursoGradiente, ])
+                )
+                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 8, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 8))
+
+            //linha divisora
+            Rectangle()
+                .frame(width: 150, height: 2)
                 .foregroundStyle(.black)
-            
-            LazyHGrid(rows: rows) {
-                ForEach(0..<resource.totalInstances, id: \.self) { _ in
-                    Circle()
-                        .frame(width: 10, height: 10)
-                        .foregroundStyle(.black)
-                }
-            }
+
+            Text("\(resource.totalInstances)")
+                .font(.system(size: 32))
+                .bold()
+                .foregroundStyle(.azulEscuro)
+                .frame(width: 150, height: 58)
+                .background(
+                    Gradient(colors: [.azulClaro, .cinzaMedioRecursoGradiente, .cinzaEscuroRecursoGrad])
+
+                )
+                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 0, bottomLeadingRadius: 8, bottomTrailingRadius:8, topTrailingRadius: 0))
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .foregroundStyle(Color.secondary)
-        )
-        .padding(.horizontal)
+
+
     }
-//        VStack {
-//            Text("R1")
-//                .bold()
-//                .frame(maxHeight: .infinity, alignment: .top)
-//                .padding()
-//
-//            Grid {
-//
-//            }
-//        }
-//        .frame(width: 100, height: 100)
-//        .background {
-//            RoundedRectangle(cornerRadius: 2)
-//                .foregroundStyle(.gray)
-//        }
-//
-//    }
 }
 
 #Preview {
-    ResourceView(resource: Resource(name: "", id: 0, quantity: 0), rows: [])
+    ResourceView(resource: Resource(name: "Buffer de memória", id: 0, quantity: 5))
         .frame(width: 200, height: 200)
 }
