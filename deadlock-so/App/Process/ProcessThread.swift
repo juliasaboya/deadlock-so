@@ -88,13 +88,13 @@ class ProcessThread: Thread, Identifiable {
     }
 
     private func useResource(_ resource: Resource) {
-        timerUse = Timer.scheduledTimer(withTimeInterval: intervalUse, repeats: false) { [weak self] _ in
-            print("[Process \(self?.id ?? 0)] Liberou recurso \(resource.name)")
-            self?.simulationVM.availableResources[resource.id].signal()
+//        timerUse = Timer.scheduledTimer(withTimeInterval: intervalUse, repeats: false) { [weak self] _ in
+            print("[Process \(self.id)] Liberou recurso \(resource.name)")
+            self.simulationVM.availableResources[resource.id].signal()
             // TODO: nesse momento dá um remove na lista de tuplas - momento da liberação, qual o recurso
             // TODO: tuplas N. (Tempo, recurso)
 
-        }
+//        }
 
         // Libera o recurso após o tempo de uso, sem bloquear a thread principal
         //        DispatchQueue.global().asyncAfter(deadline: .now() + intervalUse) { [weak self] in
