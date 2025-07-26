@@ -11,6 +11,9 @@ enum ProcessStatus {
     case aguardando, usando, bloqueado, deadlock
 }
 
+let mutexAR = DispatchSemaphore(value: 1)
+let mutexRR = DispatchSemaphore(value: 1)
+
 class SimulationViewModel: ObservableObject {
     @Published var resources: [Resource] = []
     @Published var isSOCreated: Bool = true

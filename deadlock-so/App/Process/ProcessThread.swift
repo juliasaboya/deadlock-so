@@ -62,18 +62,17 @@ class ProcessThread: Thread, Identifiable {
 
         // TODO: verificar numero de instancias
         requestResource(resource)
-
         tryAllocate(resource)
-        
-        
-
     }
 
     private func requestResource(_ resource: Resource) {
         print("[Process \(id)] Solicitando recurso \(resource.name)...")
         if let processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id }) {
+            //acessa a matriz de requisição com o mutex para solicitar
+            mutexRR.wait()
             simulationVM.requestedResources[processIndex][resource.id] += 1
             // TODO: append na tupla (tempo, recurso)
+            mutexRR.signal()
         }
     }
 
@@ -81,27 +80,35 @@ class ProcessThread: Thread, Identifiable {
         print("[Process \(id)] Bloqueado aguardando \(resource.name)...")
         
         simulationVM.availableResources[resource.id].wait()
+        //conseguiu solicitar, retira a requisição da matriz de requisição e adiciona o recurso como alocado na matriz de alocação
+        if let processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id }) {
+            // TODO: append na tupla (tempo, recurso)
+            mutexRR.wait()
+            simulationVM.requestedResources[processIndex][resource.id] -= 1
+            mutexRR.signal()
+            mutexAR.wait()
+            simulationVM.allocatedResources[processIndex][resource.id] += 1
+            mutexAR.signal()
+        }
         // TODO: O append é aqui
+        mutexAR.wait()
+        
+        
         print("[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s")
-
-//        useResource(resource)
     }
 
     private func useResource(_ resource: Resource) {
-//        timerUse = Timer.scheduledTimer(withTimeInterval: intervalUse, repeats: false) { [weak self] _ in
             print("[Process \(self.id)] Liberou recurso \(resource.name)")
             self.simulationVM.availableResources[resource.id].signal()
             // TODO: nesse momento dá um remove na lista de tuplas - momento da liberação, qual o recurso
             // TODO: tuplas N. (Tempo, recurso)
+        //terminou de usar, retira o recurso da matriz de requisição
+        if let processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id }) {
+            mutexAR.wait()
+            simulationVM.allocatedResources[processIndex][resource.id] -= 1
+            mutexAR.signal()
+        }
 
-//        }
-
-        // Libera o recurso após o tempo de uso, sem bloquear a thread principal
-        //        DispatchQueue.global().asyncAfter(deadline: .now() + intervalUse) { [weak self] in
-        //            guard let self = self else { return }
-        
-        
-        //        }
     }
     
     private func cpuBound(seconds: TimeInterval) {
