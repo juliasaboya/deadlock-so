@@ -34,9 +34,12 @@ class ProcessThread: Thread, Identifiable {
             Thread.sleep(forTimeInterval: spaceTime)
             internalTime += 1
             if internalTime % Int(intervalRequest) == 0 {
-                // MARK: Ainda não verifica as instâncias
-                guard let resource = simulationVM.resources.randomElement() else { return }
-                // TODO: verificar numero de instancias
+                // verifica se há recurso disponível que não auto bloqueie o processo, se não houver, não solicita
+                guard let resource = selectResource() else {
+                    print("Não há recurso disponível para o processo \(self.id).")
+                    continue
+                }
+                print(internalTime)
                 requestResource(resource)
                 tryAllocate(resource)
             }
@@ -91,10 +94,10 @@ class ProcessThread: Thread, Identifiable {
             mutexAR.signal()
         }
         // TODO: O append é aqui
-        mutexAR.wait()
         
         
         print("[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s")
+        useResource(resource)
     }
 
     private func useResource(_ resource: Resource) {
@@ -117,5 +120,28 @@ class ProcessThread: Thread, Identifiable {
         while Date().timeIntervalSince(start) < seconds {
             x += sin(Double.random(in: 0..<Double.pi))
         }
+    }
+    
+    private func selectResource() -> Resource? {
+        // embaralha os recursos
+        let shuffledResources = simulationVM.resources.shuffled()
+        // como vai acessar a matriz, usa o mutex
+        mutexAR.wait()
+        defer { mutexAR.signal() } // garante que o mutex será liberado mesmo com retorno antecipado
+        
+        guard let processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id }) else {
+            return nil
+        }
+        
+        for resource in shuffledResources {
+            // checa se o processo ainda não possui todas as instâncias do recurso
+            if simulationVM.allocatedResources[processIndex][resource.id] < resource.totalInstances {
+                
+                return resource
+            }
+        }
+        
+        // se nenhum recurso estiver disponível, então retorna nil para não solicitar nenhum recurso
+        return nil
     }
 }
