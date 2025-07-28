@@ -21,6 +21,7 @@ class SimulationViewModel: ObservableObject {
     @Published var processes: [ProcessThread] = []
     @Published var createSOSheet: Bool = false
     @Published var createProcess: Bool = false
+    @Published var removeProcessSheet: Bool = false
     
     /*@Published*/ var existingResources: [Int] = []
     /*@Published*/ var allocatedResources: [[Int]] = []
@@ -53,6 +54,21 @@ class SimulationViewModel: ObservableObject {
         processes.append(process)
         allocatedResources.append(Array(repeating: 0, count: existingResources.count))
         requestedResources.append(Array(repeating: 0, count: existingResources.count))
+    }
+    
+    func removeProcess(_ processIndexToRemove: Int) {
+            print("Tentando remover processo no index \(processIndexToRemove)")
+            self.processes[processIndexToRemove].stop()
+            //TODO: tem que passar pelas tuplas e usar um for para liberar todos os recursos com o signal() e decrementar de allocatedResource
+            //mutexAR.wait()
+            //for tupla {
+                //self.simulationVM.availableResources[resource.id].signal()
+                //simulationVM.allocatedResources[self.id][resource.id] -= 1
+            // }
+            //mutexAR.signal()
+            
+            self.processes.remove(at: processIndexToRemove)
+        
     }
 }
 

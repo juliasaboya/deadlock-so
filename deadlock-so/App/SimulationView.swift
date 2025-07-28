@@ -66,7 +66,8 @@ struct SimulationView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                         .padding(.top)
                         Button {
-                            simulationVM.logs.append(LogEntry(message: "Impressora solicitou uma instância do recurso Impressora!"))
+                            simulationVM.removeProcessSheet = true
+                       //     simulationVM.logs.append(LogEntry(message: "Impressora solicitou uma instância do recurso Impressora!"))
                         } label: {
                             Text("Criar fake log")
                                 .font(.headline)
@@ -86,6 +87,9 @@ struct SimulationView: View {
             }
             .sheet(isPresented: $simulationVM.createProcess) {
                 CreateProcessView(simulationVM: simulationVM)
+            }
+            .sheet(isPresented: $simulationVM.removeProcessSheet) {
+                RemoveProcessView(simulationVM: simulationVM)
             }
             .onAppear {
                 evenResources = simulationVM.resources.enumerated().filter {$0.offset % 2 == 0 }.map { $0.element }

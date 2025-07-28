@@ -19,7 +19,7 @@ class ProcessThread: Thread, Identifiable {
     
     let simulationVM: SimulationViewModel
     
-    let second = TimeInterval(1)
+    let aSecond = TimeInterval(1)
     @Published var internalTime: Int = 0
     
     init(id: Int, intervalRequest: TimeInterval, intervalUse: TimeInterval, simulationVM: SimulationViewModel) {
@@ -32,8 +32,11 @@ class ProcessThread: Thread, Identifiable {
     override func main() {
         Thread.current.name = "Process \(id)"
         while isRunning {
-            
-            Thread.sleep(forTimeInterval: second)
+            Thread.sleep(forTimeInterval: aSecond)
+            guard (simulationVM.processes.firstIndex(where: { $0.id == self.id }) != nil) else {
+                isRunning = false
+                break
+            }
             internalTime += 1
             print("Tempo atual [Process \(id)]: \(internalTime)")
             
@@ -49,11 +52,19 @@ class ProcessThread: Thread, Identifiable {
 //                }
             }
         }
-        
     }
     
-    private func stop() {
-        isRunning = false
+    func checkExistence() -> Bool {
+        if simulationVM.processes.firstIndex(where: { $0.id == self.id }) != nil {
+            return true
+        }
+        return false
+    }
+
+    func stop() {
+            print("stop() chamado no processo \(id)")
+            self.isRunning = false
+            print("is running: \(isRunning)")
     }
     
     private func useResource() {
