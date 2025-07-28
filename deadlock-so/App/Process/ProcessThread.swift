@@ -15,8 +15,7 @@ class ProcessThread: Thread {
     let requestInterval: TimeInterval
     let usageInterval: TimeInterval
     let allResources: [Resource]
-//    private(set) var isRunning = true
-    var isRunning: Bool
+    private(set) var isRunning = true
 
 
     init(id: Int, requestInterval: TimeInterval, usageInterval: TimeInterval, allResources: [Resource], isRunning: Bool) {
