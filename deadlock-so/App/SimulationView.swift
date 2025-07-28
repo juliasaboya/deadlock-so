@@ -34,7 +34,7 @@ struct SimulationView: View {
                     ZStack {
                         VStack {
                             ForEach(evenResources) { resource in
-                                ResourceView(resource: resource, rows: rows)
+                                ResourceView(resource: resource)
                             }
                             .frame(alignment: .top)
                             
@@ -50,7 +50,7 @@ struct SimulationView: View {
                             .frame(alignment: .center)
                             
                             ForEach(oddResources) { resource in
-                                ResourceView(resource: resource, rows: rows)
+                                ResourceView(resource: resource)
                             }
                             .frame(alignment: .bottom)
                         }
