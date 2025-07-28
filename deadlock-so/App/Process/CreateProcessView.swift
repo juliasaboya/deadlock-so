@@ -44,7 +44,7 @@ struct CreateProcessView: View {
                 Button("Salvar") {
                     let process = ProcessThread(id: Int(processID)!, intervalRequest: TimeInterval(intervalRequest)!, intervalUse: TimeInterval(intervalUse)!, simulationVM: simulationVM)
                     process.start()
-                    simulationVM.processes.append(ProcessThread(id: Int(processID)!, intervalRequest: TimeInterval(intervalRequest)!, intervalUse: TimeInterval(intervalUse)!, simulationVM: simulationVM))
+                    simulationVM.appendProcess(process)
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)

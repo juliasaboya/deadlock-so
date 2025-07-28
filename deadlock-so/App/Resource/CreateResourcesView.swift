@@ -77,6 +77,7 @@ struct CreateResourcesView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(resourceName.isEmpty || Int(resourceInstances) == nil || Int(resourceInstances)! <= 0 || generateNextID() == nil)
+                    .keyboardShortcut(.defaultAction)
                 }
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

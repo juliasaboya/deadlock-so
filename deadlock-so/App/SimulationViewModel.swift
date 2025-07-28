@@ -28,15 +28,26 @@ class SimulationViewModel: ObservableObject {
     @Published var availableResources: [ResourceSemaphore] = []
     
     init(parameters: SimulationParameters) {
+//        self.allocatedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
+//        self.requestedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
         resources = parameters.resources
         parameters.resources.forEach { resource in
             self.existingResources.append(resource.totalInstances)
             self.availableResources.append(ResourceSemaphore(value: resource.totalInstances))
-            self.allocatedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
-            self.requestedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
         }
+        print("Existing: \(existingResources)")
+        print("Allocated: \(allocatedResources)")
+        print("Requested: \(requestedResources)")
+        print("Available: \(availableResources.map(\.count))")
+        
         let operatingSystem = OperatingSystem(simulationVM: self)
         operatingSystem.start()
+    }
+    
+    func appendProcess(_ process: ProcessThread) {
+        processes.append(process)
+        allocatedResources.append(Array(repeating: 0, count: existingResources.count))
+        requestedResources.append(Array(repeating: 0, count: existingResources.count))
     }
 }
 
