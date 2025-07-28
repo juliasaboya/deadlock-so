@@ -23,10 +23,10 @@ class SimulationViewModel: ObservableObject {
     @Published var createProcess: Bool = false
     @Published var removeProcessSheet: Bool = false
     
-    /*@Published*/ var existingResources: [Int] = []
-    /*@Published*/ var allocatedResources: [[Int]] = []
-    /*@Published*/ var requestedResources: [[Int]] = []
-    /*@Published*/ var availableResources: [ResourceSemaphore] = []
+    @Published var existingResources: [Int] = []
+    @Published var allocatedResources: [[Int]] = []
+    @Published var requestedResources: [[Int]] = []
+    @Published var availableResources: [ResourceSemaphore] = []
     
     let deltaT: TimeInterval
     @Published var isDeadlocked = false
@@ -56,19 +56,43 @@ class SimulationViewModel: ObservableObject {
         requestedResources.append(Array(repeating: 0, count: existingResources.count))
     }
     
-    func removeProcess(_ processIndexToRemove: Int) {
-            print("Tentando remover processo no index \(processIndexToRemove)")
-            self.processes[processIndexToRemove].stop()
-            //TODO: tem que passar pelas tuplas e usar um for para liberar todos os recursos com o signal() e decrementar de allocatedResource
-            //mutexAR.wait()
-            //for tupla {
-                //self.simulationVM.availableResources[resource.id].signal()
-                //simulationVM.allocatedResources[self.id][resource.id] -= 1
-            // }
-            //mutexAR.signal()
-            
-            self.processes.remove(at: processIndexToRemove)
+    func removeProcess(_ process: ProcessThread) {
+        print("Tentando remover processo no index \(process.id)")
+        //        DispatchQueue.main.async { [unowned self] in
+        process.isRunning = false
+        //        }
         
+        let resourcesToFreeIds = process.freeResourcesTimes
+            .map { $0.resourceId }
+        
+//        guard let processIndex = self.processes.firstIndex(where: { $0.id == process.id }) else { return }
+        
+//        if let requestedResourceId = requestedResources[processIndex].firstIndex(where: { $0 > 0 }) {
+//            resourcesToFreeIds.append(requestedResourceId)
+//        }
+        
+        if let processIndex = self.processes.firstIndex(where: { $0.id == process.id }) {
+            mutexAR.wait()
+            self.allocatedResources.remove(at: processIndex)
+            mutexAR.signal()
+            mutexRR.wait()
+            self.requestedResources.remove(at: processIndex)
+            mutexRR.signal()
+            self.processes.remove(at: processIndex)
+            
+            for resourceId in resourcesToFreeIds {
+                let resource = resources.first(where: { $0.id == resourceId })!
+                
+                self.availableResources[resource.id].signal()
+                print("[Process \(process.id)] Liberou recurso \(resource.name)")
+                print("Available: \(self.availableResources.map(\.count))")
+                
+            }
+        }
+        
+        
+        
+        //TODO: tem que passar pelas tuplas e usar um for para liberar todos os recursos com o signal() e decrementar de allocatedResource
     }
 }
 

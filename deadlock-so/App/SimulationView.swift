@@ -69,7 +69,7 @@ struct SimulationView: View {
                             simulationVM.removeProcessSheet = true
                        //     simulationVM.logs.append(LogEntry(message: "Impressora solicitou uma instância do recurso Impressora!"))
                         } label: {
-                            Text("Criar fake log")
+                            Text("REMOVER PROCESSO")
                                 .font(.headline)
                         }
                         .buttonStyle(.borderedProminent)
