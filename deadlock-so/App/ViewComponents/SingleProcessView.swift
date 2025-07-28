@@ -26,8 +26,3 @@ struct SingleProcessView: View {
     }
 }
 
-#Preview {
-    SingleProcessView(process: ProcessThread(id: 1, requestInterval: 2, usageInterval: 2, allResources: [Resource(name: "cpu", id: 1, quantity: 1)]))
-        .frame(width: 400, height: 400)
-
-}
