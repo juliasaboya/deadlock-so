@@ -40,7 +40,7 @@ struct SimulationView: View {
                             
                             HStack {
                                 Spacer()
-                                ForEach(simulationVM.process) { process in
+                                ForEach(simulationVM.processes) { process in
                                     Circle()
                                         .frame(width: 100, height: 100)
                                         .foregroundStyle(.red)
@@ -66,9 +66,10 @@ struct SimulationView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                         .padding(.top)
                         Button {
-                            simulationVM.logs.append(LogEntry(message: "Impressora solicitou uma instância do recurso Impressora!"))
+                            simulationVM.removeProcessSheet = true
+                       //     simulationVM.logs.append(LogEntry(message: "Impressora solicitou uma instância do recurso Impressora!"))
                         } label: {
-                            Text("Criar fake log")
+                            Text("REMOVER PROCESSO")
                                 .font(.headline)
                         }
                         .buttonStyle(.borderedProminent)
@@ -86,6 +87,9 @@ struct SimulationView: View {
             }
             .sheet(isPresented: $simulationVM.createProcess) {
                 CreateProcessView(simulationVM: simulationVM)
+            }
+            .sheet(isPresented: $simulationVM.removeProcessSheet) {
+                RemoveProcessView(simulationVM: simulationVM)
             }
             .onAppear {
                 evenResources = simulationVM.resources.enumerated().filter {$0.offset % 2 == 0 }.map { $0.element }

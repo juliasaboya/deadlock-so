@@ -7,14 +7,8 @@
 
 import SwiftUI
 
-struct SimulationParameters: Hashable, Equatable, Identifiable {
-    let id = UUID()
-    var resources: [Resource]
-    var deltaT: TimeInterval
-}
-
 struct CreateResourcesView: View {
-    @State var parameters = SimulationParameters(resources: [], deltaT: 0)
+    @State var parameters = SimulationParameters(resources: [], deltaT: 5)
     
     @State private var resourceName: String = ""
     @State private var resourceID: String = ""
@@ -83,6 +77,7 @@ struct CreateResourcesView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(resourceName.isEmpty || Int(resourceInstances) == nil || Int(resourceInstances)! <= 0 || generateNextID() == nil)
+                    .keyboardShortcut(.defaultAction)
                 }
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

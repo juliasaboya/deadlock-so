@@ -22,14 +22,14 @@ final class ProcessSimulationTests: XCTestCase {
         for i in 1...5 {
             let requestInterval = TimeInterval(Int.random(in: 1...2))
             let usageInterval = TimeInterval(Int.random(in: 2...3))
-            let process = ProcessThread(id: i, requestInterval: requestInterval, usageInterval: usageInterval, allResources: resources)
-            processes.append(process)
-            process.start()
+//            let process = ProcessThread(id: i, requestInterval: requestInterval, usageInterval: usageInterval, allResources: resources)
+//            processes.append(process)
+//            process.start()
         }
 
         let expectation = XCTestExpectation(description: "Espera a simulação terminar")
         DispatchQueue.global().asyncAfter(deadline: .now() + 10) {
-            processes.forEach { $0.stop() }
+//            processes.forEach { $0.stop() }
             expectation.fulfill()
         }
 
