@@ -10,16 +10,22 @@ import SwiftUI
 
 struct SingleProcessView: View {
     var process: ProcessThread
+    let circleDiameter: CGFloat
     var backgroundColor: Color {
         if process.isRunning {
             return .verdeProcessos
         }
         return .cinzaPadrao
     }
+
+    init(process: ProcessThread, circleDiameter: CGFloat) {
+        self.process = process
+        self.circleDiameter = circleDiameter
+    }
     var body: some View {
         Text("P\(process.id)")
-            .font(.system(size: 28, weight: .bold))
-            .frame(width: 80, height: 80)
+            .font(.system(size: circleDiameter/2.8, weight: .bold))
+            .frame(width: circleDiameter, height: circleDiameter)
             .background(backgroundColor)
             .clipShape(Circle())
             .dropLight(isOn: process.isRunning)
