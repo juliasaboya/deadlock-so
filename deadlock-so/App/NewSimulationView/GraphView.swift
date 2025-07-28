@@ -67,16 +67,8 @@ struct GraphView: View {
     ],
               processes:
                 [
-                    ProcessThread(id: 1, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: true),
-                    ProcessThread(id: 2, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: true),
-                    ProcessThread(id: 3, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: false),
-                    ProcessThread(id: 4, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: true),
-                    ProcessThread(id: 5, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: true),
-                    ProcessThread(id: 6, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: false),
-                    ProcessThread(id: 7, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: false),
-                    ProcessThread(id: 8, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: true),
-                    ProcessThread(id: 9, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: false),
-                    ProcessThread(id: 10, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: true),
+                    ProcessThread(id: 1, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+                    ProcessThread(id: 1, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
                 ]
     )
     .frame(width: 1440/2, height: 1024/2)
