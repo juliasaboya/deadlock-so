@@ -18,11 +18,12 @@ class ProcessThread: Thread {
     private(set) var isRunning = true
 
 
-    init(id: Int, requestInterval: TimeInterval, usageInterval: TimeInterval, allResources: [Resource]) {
+    init(id: Int, requestInterval: TimeInterval, usageInterval: TimeInterval, allResources: [Resource], isRunning: Bool) {
         self.id = id
         self.requestInterval = requestInterval
         self.usageInterval = usageInterval
         self.allResources = allResources
+        self.isRunning = isRunning
 
     }
 
