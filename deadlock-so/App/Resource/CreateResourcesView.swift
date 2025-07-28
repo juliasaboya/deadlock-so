@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-struct SimulationParameters: Hashable, Equatable, Identifiable {
-    let id = UUID()
-    var resources: [Resource]
-    var deltaT: TimeInterval
-}
-
 struct CreateResourcesView: View {
     @State var parameters = SimulationParameters(resources: [], deltaT: 0)
     
