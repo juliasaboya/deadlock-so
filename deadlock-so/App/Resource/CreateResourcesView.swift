@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateResourcesView: View {
-    @State var parameters = SimulationParameters(resources: [], deltaT: 0)
+    @State var parameters = SimulationParameters(resources: [], deltaT: 5)
     
     @State private var resourceName: String = ""
     @State private var resourceID: String = ""

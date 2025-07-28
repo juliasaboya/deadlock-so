@@ -22,14 +22,19 @@ class SimulationViewModel: ObservableObject {
     @Published var createSOSheet: Bool = false
     @Published var createProcess: Bool = false
     
-    @Published var existingResources: [Int] = []
-    @Published var allocatedResources: [[Int]] = []
-    @Published var requestedResources: [[Int]] = []
-    @Published var availableResources: [ResourceSemaphore] = []
+    /*@Published*/ var existingResources: [Int] = []
+    /*@Published*/ var allocatedResources: [[Int]] = []
+    /*@Published*/ var requestedResources: [[Int]] = []
+    /*@Published*/ var availableResources: [ResourceSemaphore] = []
+    
+    let deltaT: TimeInterval
+    @Published var isDeadlocked = false
+    
+    
     
     init(parameters: SimulationParameters) {
-//        self.allocatedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
-//        self.requestedResources = Array(repeating: Array(repeating: 0, count: 10), count: 10)
+        deltaT = parameters.deltaT
+        
         resources = parameters.resources
         parameters.resources.forEach { resource in
             self.existingResources.append(resource.totalInstances)

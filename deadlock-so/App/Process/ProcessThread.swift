@@ -38,15 +38,15 @@ class ProcessThread: Thread, Identifiable {
             print("Tempo atual [Process \(id)]: \(internalTime)")
             
             if internalTime % Int(intervalRequest) == 0 {
-                DispatchQueue.main.async { [unowned self] in
+//                DispatchQueue.main.sync { [unowned self] in
                     useResource()
-                }
+//                }
             }
             
             if internalTime == freeResourcesTimes.first?.0 {
-                DispatchQueue.main.async { [unowned self] in
+//                DispatchQueue.main.sync { [unowned self] in
                     freeResources()
-                }
+//                }
             }
         }
         
@@ -120,8 +120,6 @@ class ProcessThread: Thread, Identifiable {
         let freeTime = internalTime + Int(intervalUse)
         freeResourcesTimes.append((freeTime, resource.id))
         
-        
-//        freeResource(resource) // tem que sair daqui...
     }
     
     private func freeResources() {
