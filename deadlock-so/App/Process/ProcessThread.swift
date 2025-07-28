@@ -32,14 +32,18 @@ class ProcessThread: Thread, Identifiable {
         Thread.current.name = "Process \(id)"
         while isRunning {
             Thread.sleep(forTimeInterval: spaceTime)
+            guard (simulationVM.processes.firstIndex(where: { $0.id == self.id }) != nil) else {
+                isRunning = false
+                break
+            }
             internalTime += 1
             if internalTime % Int(intervalRequest) == 0 {
                 // verifica se há recurso disponível que não auto bloqueie o processo, se não houver, não solicita
                 guard let resource = selectResource() else {
+//                    self.isRunning = false
                     print("Não há recurso disponível para o processo \(self.id).")
                     continue
                 }
-                print(internalTime)
                 requestResource(resource)
                 tryAllocate(resource)
             }
@@ -48,16 +52,24 @@ class ProcessThread: Thread, Identifiable {
             /*
              if internalTime == tupla[0][1] (?) {
              
-                useResource(resource)
+             useResource(resource)
              
              }
              */
         }
-        
+    }
+    
+    func checkExistence() -> Bool {
+        if simulationVM.processes.firstIndex(where: { $0.id == self.id }) != nil {
+            return true
+        }
+        return false
     }
 
     func stop() {
-        isRunning = false
+            print("stop() chamado no processo \(id)")
+            self.isRunning = false
+            print("is running: \(isRunning)")
     }
     
     private func requestResourceAndUse() {
