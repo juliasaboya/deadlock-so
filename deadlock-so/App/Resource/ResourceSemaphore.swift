@@ -9,8 +9,8 @@ import Foundation
 
 final class ResourceSemaphore {
     private var semaphore: DispatchSemaphore
-    private var count: Int
-    private let lock = NSLock()
+    private(set) var count: Int
+    private let mutex = DispatchSemaphore(value: 1)
 
     init(value: Int) {
         self.semaphore = DispatchSemaphore(value: value)
@@ -19,15 +19,15 @@ final class ResourceSemaphore {
 
     func wait() {
         semaphore.wait()
-        lock.lock()
+        mutex.wait()
         count -= 1
-        lock.unlock()
+        mutex.signal()
     }
 
     func signal() {
         semaphore.signal()
-        lock.lock()
+        mutex.wait()
         count += 1
-        lock.unlock()
+        mutex.signal()
     }
 }

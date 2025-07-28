@@ -13,6 +13,7 @@ import Foundation
 class OperatingSystem: Thread {
     let simulationVM: SimulationViewModel
     var alive = true
+    var systemTime = 0
     
     init(simulationVM: SimulationViewModel) {
         self.simulationVM = simulationVM
@@ -22,7 +23,12 @@ class OperatingSystem: Thread {
     
     override func main() {
         while alive {
-            _ = detectDeadlocks()
+            Thread.sleep(forTimeInterval: 1)
+            systemTime += 1
+            if systemTime % Int(simulationVM.deltaT) == 0 {
+//                print("\(simulationVM.isDeadlocked = (detectDeadlocks() == [] ? false : true ))")
+                print("[Sistema Operacional] Processos em DeadLock: \(detectDeadlocks())")
+            }
         }
     }
     
@@ -39,31 +45,33 @@ class OperatingSystem: Thread {
         
         var allocated = simulationVM.allocatedResources
         var requested = simulationVM.requestedResources
-        var alive = true
+        var changed = true
         var finished = Array(repeating: false, count: n)
         
-        while alive {
-            alive = false
+        while changed {
+            changed = false
             for i in 0..<n {
                 if !finished[i] {
-                    // verifica se todos os recursos que o processo requisita estão disponíveis
-                    let canExecute = (0..<m).allSatisfy { requested[i][$0] <= available[$0] }
-                    
-                    if canExecute {
-                        
-                        // entrega os recursos ao processo
+                    // 1. Verificar se a requisição pode ser atendida com os recursos disponíveis
+                    let canProceed = (0..<m).allSatisfy { requested[i][$0] <= available[$0] }
+                    if canProceed {
+                        // 2. Simular entrega dos recursos requisitados:
                         for j in 0..<m {
+                            // "Entrega": adiciona R[i][j] em C[i][j], zera R[i][j]
                             allocated[i][j] += requested[i][j]
                             available[j] -= requested[i][j]
+                            requested[i][j] = 0
                         }
 
-                        // libera os recursos alocados
+                        // 3. Simular conclusão do processo (liberação dos recursos)
                         for j in 0..<m {
-                            available[j] += allocated[i][j]
+                            available[j] += allocated[i][j] // libera os recursos alocados
+                            allocated[i][j] = 0
                         }
 
-                        finished[i] = true // marca o processo atual como finalizado
-                        alive = true // pelo menos um processo foi executado, portanto roda de novo
+                        // 4. Marca processo como finalizado
+                        finished[i] = true
+                        changed = true
                     }
                 }
             }
