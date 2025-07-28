@@ -79,6 +79,6 @@ struct GraphView: View {
                     ProcessThread(id: 10, requestInterval: 0.1, usageInterval: 0.1, allResources: [], isRunning: true),
                 ]
     )
-    .frame(width: 1440, height: 1024)
+    .frame(width: 1440/2, height: 1024/2)
 
 }
