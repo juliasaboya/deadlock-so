@@ -7,24 +7,48 @@
 
 import SwiftUI
 
+func split<T>(_ array: [T]) -> ([T], [T]) {
+    let half = array.count / 2
+    return (Array(array[0..<half]), Array(array[half..<array.count]))
+}
+
 struct GraphView: View {
     var resources: [Resource]
     var processes: [ProcessThread]
+    var availableResources: [ResourceSemaphore]
+    var leftResources: [Resource]
+    var rightResources: [Resource]
+    var leftAvailable: [ResourceSemaphore]
+    var rightAvailable: [ResourceSemaphore]
 
-    init(resources: [Resource], processes: [ProcessThread]) {
+
+    init(resources: [Resource], availableResources: [ResourceSemaphore], processes: [ProcessThread]) {
         self.resources = resources
+        self.availableResources = availableResources
         self.processes = processes
+
+        let (leftResources, rightResources) = split(resources)
+        let (leftAvailable, rightAvailable) = split(availableResources)
+
+        self.leftResources = leftResources
+        self.rightResources = rightResources
+        self.leftAvailable = leftAvailable
+        self.rightAvailable = rightAvailable
     }
+
+
 
     var body: some View {
         GeometryReader { proxy in
             VStack(spacing: proxy.size.height * 0.18) {
                 HStack(spacing: 0.02 * proxy.size.width) {
-                    ForEach(0..<resources.count/2, id: \.self){
-                        resourceIndex in
-                        ResourceView(resource: resources[resourceIndex],
-                                     width: proxy.size.width * 0.15,
-                                     totalHeight: proxy.size.height * 0.1)
+                    ForEach(Array(leftResources.enumerated()), id: \.offset) { index, resource in
+                        ResourceView(
+                            resource: resource,
+                            availableResources: [leftAvailable[index]],
+                            width: proxy.size.width * 0.15,
+                            totalHeight: proxy.size.height * 0.1
+                        )
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -35,13 +59,14 @@ struct GraphView: View {
                     }
                 }
                 HStack(spacing: 0.02 * proxy.size.width) {
-                    ForEach(resources.count/2..<resources.count, id: \.self){
-                        resourceIndex in
-                        ResourceView(resource: resources[resourceIndex],
-                                     width: proxy.size.width * 0.15,
-                                     totalHeight: proxy.size.height * 0.1)
-
-                    }
+                    ForEach(Array(rightResources.enumerated()), id: \.offset) { index, resource in
+                            ResourceView(
+                                resource: resource,
+                                availableResources: [rightAvailable[index]],
+                                width: proxy.size.width * 0.15,
+                                totalHeight: proxy.size.height * 0.1
+                            )
+                        }
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -50,27 +75,3 @@ struct GraphView: View {
     }
 }
 
-//#Preview {
-//    GraphView(resources: [
-//
-//        Resource(name: "Buffer de memória", id: 0, quantity: 5),
-//        Resource(name: "Impressora", id: 1, quantity: 30),
-//        Resource(name: "Porta USB", id: 2, quantity: 1),
-//        Resource(name: "Scanner", id: 3, quantity: 3),
-//        Resource(name: "Leitor de cartão", id: 4, quantity: 12),
-//        Resource(name: "Unidade de fita", id: 5, quantity: 10),
-//        Resource(name: "Modem", id: 6, quantity: 2),
-//        Resource(name: "Disco rígido", id: 7, quantity: 6),
-//        Resource(name: "Placa de som", id: 8, quantity: 15),
-//        Resource(name: "Placa de vídeo", id: 9, quantity: 10),
-//
-//    ],
-//              processes:
-//                [
-//                    ProcessThread(id: 1, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-//                    ProcessThread(id: 1, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-//                ]
-//    )
-//    .frame(width: 1440, height: 1024)
-//
-//}
