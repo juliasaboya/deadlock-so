@@ -16,6 +16,9 @@ struct CreateProcessView: View {
     @State private var intervalRequest: String = ""
     @State private var intervalUse: String = ""
     
+    @State private var isValid: Bool = true
+    @State private var lastID: String?
+    
     var body: some View {
         VStack(spacing: 20) {
             Text("Criar Processo")
@@ -25,6 +28,10 @@ struct CreateProcessView: View {
                 Text("Identificador do processo:")
                     .font(.headline)
                 TextField("Ex: 2", text: $processID)
+                Text("Processo com o ID \(lastID!) já adicionado. Tente outro.")
+                    .opacity(isValid ? 0 : 1)
+                    .font(.caption)
+                    .foregroundStyle(.red)
                 Text("Tempo de intervalo entre solicitações de recursos:")
                     .font(.headline)
                 TextField("Em segundos", text: $intervalRequest)
@@ -42,10 +49,15 @@ struct CreateProcessView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Salvar") {
-                    let process = ProcessThread(id: Int(processID)!, intervalRequest: TimeInterval(intervalRequest)!, intervalUse: TimeInterval(intervalUse)!, simulationVM: simulationVM)
-                    process.start()
-                    simulationVM.appendProcess(process)
-                    dismiss()
+                    if simulationVM.processes.contains(where: { $0.id == Int(processID)! }) {
+                        isValid = false
+                        lastID = processID
+                    } else {
+                        let process = ProcessThread(id: Int(processID)!, intervalRequest: TimeInterval(intervalRequest)!, intervalUse: TimeInterval(intervalUse)!, simulationVM: simulationVM)
+                        process.start()
+                        simulationVM.appendProcess(process)
+                        dismiss()
+                    }
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(Int(processID) == nil || Int(processID)! <= 0 || Int(intervalRequest) == nil || Int(intervalRequest)! <= 0 || Int(intervalUse) == nil || Int(intervalUse)! <= 0)

@@ -59,12 +59,33 @@ struct SimulationView: View {
                         Button {
                             simulationVM.createProcess = true
                         } label: {
-                            Text("Criar processo")
-                                .font(.headline)
+                            ZStack {
+                                Image("CriarProcessoImagem")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(
+                                        width: floor(geometry.size.width / 6.5),
+                                        height: floor(geometry.size.height / 5)
+                                    )
+                                    .clipped()
+                                
+                                VStack {
+                                    Text("Criar")
+                                        .font(.system(size: geometry.size.height / 20))
+                                    Image(systemName: "plus.circle")
+                                        .resizable()
+                                        .frame(
+                                            width: geometry.size.height / 20,
+                                            height: geometry.size.height / 20
+                                        )
+                                    Text("Processo")
+                                        .font(.system(size: geometry.size.height / 20))
+                                }
+                            }
                         }
-                        .buttonStyle(.accessoryBarAction)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                        .padding(.top)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+//                        .buttonStyle(.accessoryBarAction)
+                        
                         Button {
                             simulationVM.removeProcessSheet = true
                        //     simulationVM.logs.append(LogEntry(message: "Impressora solicitou uma instância do recurso Impressora!"))
