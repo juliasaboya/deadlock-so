@@ -59,9 +59,8 @@ class SimulationViewModel: ObservableObject {
     func removeProcess(_ process: ProcessThread) {
         print("Tentando remover processo no index \(process.id)")
         logs.append(LogEntry(message: "Removendo processo \(process.id)"))
-        //        DispatchQueue.main.async { [unowned self] in
-        process.isRunning = false
-        //        }
+        
+        process.alive = false
         
         var resourcesToFreeIds = process.freeResourcesTimes
             .map { $0.resourceId }
@@ -73,7 +72,6 @@ class SimulationViewModel: ObservableObject {
         }
         mutexRR.signal()
         
-//        if let processIndex = self.processes.firstIndex(where: { $0.id == process.id }) {
             mutexAR.wait()
             self.allocatedResources.remove(at: processIndex)
             mutexAR.signal()
@@ -94,7 +92,6 @@ class SimulationViewModel: ObservableObject {
 
 
             }
-//        }
         
         
         

@@ -74,7 +74,6 @@ struct MatrixView: View {
                         ForEach(0..<1, id: \.self) { _ in
                             HStack(spacing: 0) {
                                 ForEach(vectorData, id: \.self) { data in
-                                    // alimentar aqui
                                     Text("\(data)")
                                         .font(.system(size: constant))
                                         .frame(width: cellSize, height: cellSize)
@@ -82,6 +81,7 @@ struct MatrixView: View {
                             }
                         }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .frame(width: cellSize * CGFloat(columns), height: cellSize * CGFloat(1))
             }
@@ -131,6 +131,7 @@ struct MatrixView: View {
                             }
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
                 .frame(width: cellSize * CGFloat(columns), height: cellSize * CGFloat(rows))
 
@@ -178,6 +179,7 @@ struct MatrixView: View {
                             }
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
                 .frame(width: cellSize * CGFloat(columns), height: cellSize * CGFloat(rows))
             }

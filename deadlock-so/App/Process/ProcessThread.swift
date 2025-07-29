@@ -9,18 +9,22 @@
 // utilizando e liberando recursos do sistema.
 
 import Foundation
+import SwiftUI
 
-class ProcessThread: Thread, Identifiable {
+@Observable
+class ProcessThread: Thread, Identifiable/*, ObservableObject*/ {
     let id: Int
     let intervalRequest: TimeInterval
     let intervalUse: TimeInterval
+    var alive: Bool = true
     var isRunning: Bool = true
     var freeResourcesTimes: [(freeTime: Int, resourceId: Int)] = [] // (tempo, recurso)
-    
+    var processIndex: Int = 0
+
     let simulationVM: SimulationViewModel
     
     let aSecond = TimeInterval(1)
-    @Published var internalTime: Int = 0
+    var internalTime: Int = 0
     
     init(id: Int, intervalRequest: TimeInterval, intervalUse: TimeInterval, simulationVM: SimulationViewModel) {
         self.id = id
@@ -31,9 +35,13 @@ class ProcessThread: Thread, Identifiable {
     
     override func main() {
         Thread.current.name = "Process \(id)"
-        while isRunning {
+        while alive {
             Thread.sleep(forTimeInterval: aSecond)
             internalTime += 1
+//            processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id })!
+//            mutexTime.wait()
+//            simulationVM.processesTimes[processIndex] += 1
+//            mutexTime.signal()
             
             print("Tempo atual [Process \(id)]: \(internalTime)")
             
@@ -41,7 +49,7 @@ class ProcessThread: Thread, Identifiable {
                     useResource()
             }
             
-            if internalTime == freeResourcesTimes.first?.0 && isRunning {
+            if internalTime == freeResourcesTimes.first?.0 && alive {
                     freeResources()
             }
         }
@@ -94,11 +102,12 @@ class ProcessThread: Thread, Identifiable {
     
     private func tryAllocate(_ resource: Resource) {
         print("[Process \(id)] Bloqueado aguardando \(resource.name)...")
-    
+        isRunning = false
         simulationVM.availableResources[resource.id].wait()
-        if !isRunning {
+        if !alive {
             return
         }
+        isRunning = true
         print("[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s")
         print("Available: \(simulationVM.availableResources.map(\.count))")
         //conseguiu solicitar, retira a requisição da matriz de requisição e adiciona o recurso como alocado na matriz de alocação

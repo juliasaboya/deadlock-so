@@ -94,6 +94,7 @@ struct CreateResourcesView: View {
                 NewSimulationView(simulationVM: SimulationViewModel(parameters: parameters))
             }
         }
+        .toolbar(.hidden)
     }
 
     private func generateNextID() -> Int? {

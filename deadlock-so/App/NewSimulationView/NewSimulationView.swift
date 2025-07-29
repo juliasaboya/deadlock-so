@@ -9,18 +9,6 @@ import SwiftUI
 
 struct NewSimulationView: View {
     @ObservedObject var simulationVM: SimulationViewModel
-    let mockProcesses: [ProcessThread] = [
-        ProcessThread(id: 1, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-        ProcessThread(id: 2, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-        ProcessThread(id: 3, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-        ProcessThread(id: 4, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-        ProcessThread(id: 5, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-        ProcessThread(id: 6, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-        ProcessThread(id: 7, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-        ProcessThread(id: 8, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-        ProcessThread(id: 9, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-        ProcessThread(id: 10, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
-    ]
 
     var body: some View {
         GeometryReader { proxy in
@@ -31,8 +19,9 @@ struct NewSimulationView: View {
                 ZStack {
                     VStack(spacing: 0) {
                         GraphView(
-                            resources: simulationVM.resources, availableResources: simulationVM.availableResources,
-                            processes: mockProcesses
+                            simulationVM: simulationVM
+//                            resources: simulationVM.resources, availableResources: simulationVM.availableResources,
+//                            processes: simulationVM.processes., simulationVM: simulationVM
                         )
                         .padding(.top)
                         
@@ -50,6 +39,7 @@ struct NewSimulationView: View {
                             ButtonView(topText: "Criar", imageSymbol: "plus.circle", imageButton: "CriarProcessoImagem", proxy: proxy)
                         }
                         .buttonStyle(.plain)
+                        .keyboardShortcut(.defaultAction)
                         Button {
                             simulationVM.removeProcessSheet = true
                         } label: {
