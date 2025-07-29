@@ -25,13 +25,13 @@ struct NewSimulationView: View {
     var body: some View {
         GeometryReader { proxy in
             HStack {
-                MatrixView(proxy: proxy)
-                    .padding()
+                MatrixView(proxy: proxy, vectorData: simulationVM.existingResources, a_matrixData: simulationVM.allocatedResources, r_matrixData: simulationVM.requestedResources)
+                    .padding(.horizontal)
 
                 ZStack {
                     VStack(spacing: 0) {
                         GraphView(
-                            resources: simulationVM.resources,
+                            resources: simulationVM.resources, availableResources: simulationVM.availableResources,
                             processes: mockProcesses
                         )
                         .padding(.top)
@@ -42,7 +42,7 @@ struct NewSimulationView: View {
                     }
                     .padding(.bottom)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                    .padding(.leading, 24)
+                    .padding(.leading, 0.023*proxy.size.height)
                 }
             }
 
@@ -53,7 +53,7 @@ struct NewSimulationView: View {
 #Preview {
     NewSimulationView(simulationVM: SimulationViewModel(parameters: SimulationParameters(
         resources:[
-            Resource(name: "Buffer de memória", id: 0, quantity: 5),
+            Resource(name: "Buffer de memória", id: 0, quantity: 4),
             Resource(name: "Impressora", id: 1, quantity: 30),
             Resource(name: "Porta USB", id: 2, quantity: 1),
             Resource(name: "Scanner", id: 3, quantity: 3),
@@ -66,5 +66,5 @@ struct NewSimulationView: View {
 
         ], deltaT: 3)))
     // versao 50% reduzida da tela para preview
-    .frame(width: 1440/3, height: 1024/3)
+    .frame(width: 1440/3, height: 900/3)
 }

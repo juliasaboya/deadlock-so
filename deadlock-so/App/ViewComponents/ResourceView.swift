@@ -12,8 +12,10 @@ struct ResourceView: View {
     let width: CGFloat
     let totalHeight: CGFloat
     let cornerRadius: CGFloat
-    init(resource: Resource, width: CGFloat, totalHeight: CGFloat) {
+    var availableResources: [ResourceSemaphore]
+    init(resource: Resource, availableResources: [ResourceSemaphore],width: CGFloat, totalHeight: CGFloat) {
         self.resource = resource
+        self.availableResources = availableResources
         self.width = width
         self.totalHeight = totalHeight
         self.cornerRadius = 0.07 * totalHeight
@@ -53,6 +55,6 @@ struct ResourceView: View {
 }
 
 #Preview {
-    ResourceView(resource: Resource(name: "Buffer de memória", id: 500, quantity: 5000), width: 133, totalHeight: 104)
+    ResourceView(resource: Resource(name: "Buffer de memória", id: 500, quantity: 5000), availableResources: [ResourceSemaphore(value: 1)], width: 133, totalHeight: 104)
         .frame(width: 200, height: 200)
 }
