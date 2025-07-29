@@ -34,7 +34,7 @@ struct SimulationView: View {
                     ZStack {
                         VStack {
                             ForEach(evenResources) { resource in
-                                ResourceView(resource: resource)
+                                ResourceView(resource: resource, width: 133, totalHeight: 104)
                             }
                             .frame(alignment: .top)
                             
@@ -50,7 +50,7 @@ struct SimulationView: View {
                             .frame(alignment: .center)
                             
                             ForEach(oddResources) { resource in
-                                ResourceView(resource: resource)
+                                ResourceView(resource: resource, width: 133, totalHeight: 104)
                             }
                             .frame(alignment: .bottom)
                         }
@@ -67,14 +67,14 @@ struct SimulationView: View {
                         .padding(.top)
                         Button {
                             simulationVM.removeProcessSheet = true
-                       //     simulationVM.logs.append(LogEntry(message: "Impressora solicitou uma instância do recurso Impressora!"))
+
                         } label: {
                             Text("REMOVER PROCESSO")
                                 .font(.headline)
                         }
                         .buttonStyle(.borderedProminent)
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                        LogView(size: geometry.size, simulationVM: simulationVM)
+                        LogView( logs: simulationVM.logs, proxy: geometry)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                         
                     }
