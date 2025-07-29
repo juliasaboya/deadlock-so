@@ -62,16 +62,17 @@ class SimulationViewModel: ObservableObject {
         process.isRunning = false
         //        }
         
-        let resourcesToFreeIds = process.freeResourcesTimes
+        var resourcesToFreeIds = process.freeResourcesTimes
             .map { $0.resourceId }
         
-//        guard let processIndex = self.processes.firstIndex(where: { $0.id == process.id }) else { return }
+        guard let processIndex = self.processes.firstIndex(where: { $0.id == process.id }) else { return }
+        mutexRR.wait()
+        if let requestedResourceId = requestedResources[processIndex].firstIndex(where: { $0 > 0 }) {
+            resourcesToFreeIds.append(requestedResourceId)
+        }
+        mutexRR.signal()
         
-//        if let requestedResourceId = requestedResources[processIndex].firstIndex(where: { $0 > 0 }) {
-//            resourcesToFreeIds.append(requestedResourceId)
-//        }
-        
-        if let processIndex = self.processes.firstIndex(where: { $0.id == process.id }) {
+//        if let processIndex = self.processes.firstIndex(where: { $0.id == process.id }) {
             mutexAR.wait()
             self.allocatedResources.remove(at: processIndex)
             mutexAR.signal()
@@ -88,7 +89,7 @@ class SimulationViewModel: ObservableObject {
                 print("Available: \(self.availableResources.map(\.count))")
                 
             }
-        }
+//        }
         
         
         

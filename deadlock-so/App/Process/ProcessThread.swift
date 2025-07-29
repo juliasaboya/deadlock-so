@@ -34,10 +34,7 @@ class ProcessThread: Thread, Identifiable {
         while isRunning {
             Thread.sleep(forTimeInterval: aSecond)
             internalTime += 1
-//            guard (simulationVM.processes.firstIndex(where: { $0.id == self.id }) != nil) else {
-//                isRunning = false
-//                break
-//            }
+            
             print("Tempo atual [Process \(id)]: \(internalTime)")
             
             if internalTime % Int(intervalRequest) == 0 {
@@ -48,34 +45,7 @@ class ProcessThread: Thread, Identifiable {
                     freeResources()
             }
         }
-        
-//            stop()
     }
-
-//    func stop() {
-//        let resourcesToFreeIds = freeResourcesTimes
-//            .map { $0.resourceId }
-//        
-//        for resourceId in resourcesToFreeIds {
-//            if let resource = simulationVM.resources.first(where: { $0.id == resourceId }) {
-//                
-//                self.simulationVM.availableResources[resource.id].signal()
-//                print("[Process \(self.id)] Liberou recurso \(resource.name)")
-//                print("Available: \(simulationVM.availableResources.map(\.count))")
-//            }
-//            
-//        }
-//        
-//        if let processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id }) {
-//            mutexAR.wait()
-//            simulationVM.allocatedResources.remove(at: processIndex)
-//            mutexAR.signal()
-//            mutexRR.wait()
-//            simulationVM.requestedResources.remove(at: processIndex)
-//            mutexRR.signal()
-//            simulationVM.processes.remove(at: processIndex)
-//        }
-//    }
     
     private func useResource() {
         // verifica se há recurso disponível que não auto bloqueie o processo, se não houver, não solicita
