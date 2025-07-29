@@ -27,8 +27,12 @@ class OperatingSystem: Thread {
             systemTime += 1
             if systemTime % Int(simulationVM.deltaT) == 0 {
 //                print("\(simulationVM.isDeadlocked = (detectDeadlocks() == [] ? false : true ))")
-                simulationVM.logs.append(LogEntry(message: "[Sistema Operacional] Processos em DeadLock: \(detectDeadlocks())"))
-//                print("[Sistema Operacional] Processos em DeadLock: \(detectDeadlocks())")
+                DispatchQueue.main.sync { [unowned self] in
+                    simulationVM.logs.append(LogEntry(message: "[Sistema Operacional] Processos em DeadLock: \(detectDeadlocks())"))
+                    print("[Sistema Operacional] Processos em DeadLock: \(detectDeadlocks())")
+                }
+                
+//
             }
         }
     }

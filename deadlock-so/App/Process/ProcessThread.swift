@@ -35,7 +35,7 @@ class ProcessThread: Thread, Identifiable {
             Thread.sleep(forTimeInterval: aSecond)
             internalTime += 1
             
-//            print("Tempo atual [Process \(id)]: \(internalTime)")
+            print("Tempo atual [Process \(id)]: \(internalTime)")
             
             if internalTime % Int(intervalRequest) == 0 {
                     useResource()
@@ -50,8 +50,12 @@ class ProcessThread: Thread, Identifiable {
     private func useResource() {
         // verifica se há recurso disponível que não auto bloqueie o processo, se não houver, não solicita
         guard let resource = selectResource() else {
-            simulationVM.logs.append(LogEntry(message: "Não há recurso disponível para o processo \(self.id)."))
-//            print("Não há recurso disponível para o processo \(self.id).")
+            DispatchQueue.main.sync { [unowned self] in
+                simulationVM.logs.append(LogEntry(message: "Não há recurso disponível para o processo \(self.id)."))
+                print("Não há recurso disponível para o processo \(self.id).")
+            }
+            
+//
             return
         }
         requestResource(resource)
@@ -81,8 +85,10 @@ class ProcessThread: Thread, Identifiable {
     }
     
     private func requestResource(_ resource: Resource) {
-        simulationVM.logs.append(LogEntry(message:"[Process \(id)] Solicitando recurso \(resource.name)..."))
-//        print("[Process \(id)] Solicitando recurso \(resource.name)...")
+        DispatchQueue.main.sync { [unowned self] in
+            simulationVM.logs.append(LogEntry(message:"[Process \(id)] Solicitando recurso \(resource.name)..."))
+            print("[Process \(id)] Solicitando recurso \(resource.name)...")
+        }
         if let processIndex = simulationVM.processes.firstIndex(where: { $0.id == self.id }) {
             //acessa a matriz de requisição com o mutex para solicitar
             mutexRR.wait()
@@ -95,14 +101,20 @@ class ProcessThread: Thread, Identifiable {
     }
     
     private func tryAllocate(_ resource: Resource) {
-        simulationVM.logs.append(LogEntry(message: "[Process \(id)] Bloqueado aguardando \(resource.name)..."))
-//        print("[Process \(id)] Bloqueado aguardando \(resource.name)...")
+        DispatchQueue.main.sync { [unowned self] in
+            simulationVM.logs.append(LogEntry(message: "[Process \(id)] Bloqueado aguardando \(resource.name)..."))
+            print("[Process \(id)] Bloqueado aguardando \(resource.name)...")
+        }
+//
     
         simulationVM.availableResources[resource.id].wait()
         if !isRunning {
             return
         }
-        simulationVM.logs.append(LogEntry(message: "[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s"))
+        DispatchQueue.main.sync { [unowned self] in
+            simulationVM.logs.append(LogEntry(message: "[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s"))
+            print("[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s")
+        }
 //        print("[Process \(id)] Obteve recurso \(resource.name), usando por \(intervalUse)s")
 //        print("Available: \(simulationVM.availableResources.map(\.count))")
         //conseguiu solicitar, retira a requisição da matriz de requisição e adiciona o recurso como alocado na matriz de alocação
@@ -141,7 +153,9 @@ class ProcessThread: Thread, Identifiable {
     
     private func freeResource(_ resource: Resource) {
         self.simulationVM.availableResources[resource.id].signal()
-        simulationVM.logs.append(LogEntry(message: "[Process \(self.id)] Liberou recurso \(resource.name)"))
+        DispatchQueue.main.sync { [unowned self] in
+            simulationVM.logs.append(LogEntry(message: "[Process \(self.id)] Liberou recurso \(resource.name)"))
+        }
 //        print("[Process \(self.id)] Liberou recurso \(resource.name)")
 //        print("Available: \(simulationVM.availableResources.map(\.count))")
         
