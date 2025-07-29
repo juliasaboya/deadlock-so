@@ -91,7 +91,7 @@ struct CreateResourcesView: View {
             .padding([.bottom, .top], 10)
             .disabled(parameters.resources.isEmpty)
             .navigationDestination(for: SimulationParameters.self) { parameters in
-                SimulationView(parameters: parameters)
+                NewSimulationView(simulationVM: SimulationViewModel(parameters: parameters))
             }
         }
     }
