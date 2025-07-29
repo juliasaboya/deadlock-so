@@ -9,14 +9,40 @@ import SwiftUI
 
 struct NewSimulationView: View {
     @ObservedObject var simulationVM: SimulationViewModel
+    let mockProcesses: [ProcessThread] = [
+        ProcessThread(id: 1, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+        ProcessThread(id: 2, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+        ProcessThread(id: 3, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+        ProcessThread(id: 4, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+        ProcessThread(id: 5, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+        ProcessThread(id: 6, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+        ProcessThread(id: 7, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+        ProcessThread(id: 8, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+        ProcessThread(id: 9, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+        ProcessThread(id: 10, intervalRequest: 2, intervalUse: 2, simulationVM: SimulationViewModel(parameters: SimulationParameters(resources: [], deltaT: 2))),
+    ]
 
     var body: some View {
         GeometryReader { proxy in
             HStack {
-                MatrixView()
-                    .frame(width: proxy.size.width/3, height: proxy.size.height*0.9)
-                VStack {
-//                    GraphView(resources: simulationVM.resources, processes: simulationVM.process)
+                MatrixView(proxy: proxy)
+                    .padding()
+
+                ZStack {
+                    VStack(spacing: 0) {
+                        GraphView(
+                            resources: simulationVM.resources,
+                            processes: mockProcesses
+                        )
+                        .padding(.top)
+                        
+                    }
+                    HStack {
+                        LogView(logs: simulationVM.logs, proxy: proxy)
+                    }
+                    .padding(.bottom)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                    .padding(.leading, 24)
                 }
             }
 
@@ -39,6 +65,6 @@ struct NewSimulationView: View {
             Resource(name: "Placa de vídeo", id: 9, quantity: 10),
 
         ], deltaT: 3)))
-    // versao 66% reduzida da tela para preview
-    .frame(width: 1440, height: 1024)
+    // versao 50% reduzida da tela para preview
+    .frame(width: 1440/3, height: 1024/3)
 }

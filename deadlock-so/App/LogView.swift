@@ -11,48 +11,51 @@ struct LogEntry: Identifiable, Hashable {
     let id = UUID()
     let message: String
 }
-
 struct LogView: View {
-    let size: CGSize
-    @ObservedObject var simulationVM: SimulationViewModel
-    let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
-    let columnCount = 3
-    let maxRows = 5
-    
-    var columnLogs: [[LogEntry]] {
-        var result: [[LogEntry]] = Array(repeating: [], count: columnCount)
-        for (index, log) in simulationVM.logs.prefix(columnCount * maxRows).enumerated() {
-            let column = index / maxRows
-            if column < columnCount {
-                result[column].append(log)
-            }
-        }
-        return result
+    var logs: [LogEntry]
+    var proxy: GeometryProxy
+    init(logs: [LogEntry], proxy: GeometryProxy) {
+        self.logs = logs
+        self.proxy = proxy
+//        simulationVM.logs = [
+//            LogEntry(message: "[Processo 1] Liberou recurso Buffer de memória"),
+//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
+//            LogEntry(message: "[Processo 1] Liberou recurso Buffer de memória"),
+//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
+//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
+//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
+//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
+//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
+//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
+//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
+//        ]
     }
-    
+
     var body: some View {
-        HStack(alignment: .top, spacing: 16) {
-            ForEach(0..<columnCount, id: \.self) { columnIndex in
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(columnLogs[columnIndex], id: \.self) { log in
-                        Text(log.message)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(8)
-                            .background(Color.blue.opacity(0.2))
-                            .cornerRadius(8)
-                    }
-                    // Preenche espaço se a coluna estiver incompleta
-                    ForEach(0..<(maxRows - columnLogs[columnIndex].count), id: \.self) { _ in
-                        Spacer()
-                    }
+        VStack(alignment: .leading) {
+            ScrollView {
+                ForEach(logs, id: \.self) { log in
+                    Text(log.message)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size: proxy.size.height*0.0175))
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.branco)
+                    Spacer()
                 }
-                .frame(height: size.height/3)
+
+
             }
+
         }
-        .frame(width: size.width)
+
+        .frame(width: 0.3*proxy.size.width, height: 0.19*proxy.size.height)
+        .border(.blue)
     }
+}
+
+#Preview {
+    GeometryReader { proxy in
+        LogView(logs: [LogEntry(message: "[Processo 1] Liberou recurso Buffer de memória")], proxy: proxy)
+    }
+    .frame(width: 1440, height: 1024)
 }

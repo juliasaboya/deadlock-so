@@ -58,6 +58,7 @@ class SimulationViewModel: ObservableObject {
     
     func removeProcess(_ process: ProcessThread) {
         print("Tentando remover processo no index \(process.id)")
+        logs.append(LogEntry(message: "Removendo processo \(process.id)"))
         //        DispatchQueue.main.async { [unowned self] in
         process.isRunning = false
         //        }
@@ -85,8 +86,12 @@ class SimulationViewModel: ObservableObject {
                 
                 self.availableResources[resource.id].signal()
                 print("[Process \(process.id)] Liberou recurso \(resource.name)")
+                logs.append(LogEntry(message: "[Process \(process.id)] Liberou recurso \(resource.name)"))
+
                 print("Available: \(self.availableResources.map(\.count))")
-                
+                logs.append(LogEntry(message: "Available: \(self.availableResources.map(\.count))"))
+
+
             }
         }
         
