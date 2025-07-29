@@ -41,10 +41,10 @@ class SimulationViewModel: ObservableObject {
             self.existingResources.append(resource.totalInstances)
             self.availableResources.append(ResourceSemaphore(value: resource.totalInstances))
         }
-        print("Existing: \(existingResources)")
-        print("Allocated: \(allocatedResources)")
-        print("Requested: \(requestedResources)")
-        print("Available: \(availableResources.map(\.count))")
+//        print("Existing: \(existingResources)")
+//        print("Allocated: \(allocatedResources)")
+//        print("Requested: \(requestedResources)")
+//        print("Available: \(availableResources.map(\.count))")
         
         let operatingSystem = OperatingSystem(simulationVM: self)
         operatingSystem.start()
@@ -86,19 +86,15 @@ class SimulationViewModel: ObservableObject {
                 let resource = resources.first(where: { $0.id == resourceId })!
                 
                 self.availableResources[resource.id].signal()
-                print("[Process \(process.id)] Liberou recurso \(resource.name)")
+//                print("[Process \(process.id)] Liberou recurso \(resource.name)")
                 logs.append(LogEntry(message: "[Process \(process.id)] Liberou recurso \(resource.name)"))
 
-                print("Available: \(self.availableResources.map(\.count))")
+//                print("Available: \(self.availableResources.map(\.count))")
                 logs.append(LogEntry(message: "Available: \(self.availableResources.map(\.count))"))
 
 
             }
 //        }
-        
-        
-        
-        //TODO: tem que passar pelas tuplas e usar um for para liberar todos os recursos com o signal() e decrementar de allocatedResource
     }
 }
 
