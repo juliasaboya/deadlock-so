@@ -9,33 +9,43 @@ import SwiftUI
 
 struct ResourceView: View {
     let resource: Resource
+    let width: CGFloat
+    let totalHeight: CGFloat
+    let cornerRadius: CGFloat
+    init(resource: Resource, width: CGFloat, totalHeight: CGFloat) {
+        self.resource = resource
+        self.width = width
+        self.totalHeight = totalHeight
+        self.cornerRadius = 0.07 * totalHeight
+    }
     var body: some View {
         VStack(spacing: 0) {
-            Text("\(resource.id): \(resource.name)")
-                .font(.system(size: 14))
+            Text("R\(resource.id): \(resource.name)")
+                .font(.system(size: 0.17 * totalHeight))
+                .multilineTextAlignment(.center)
                 .bold()
                 .foregroundStyle(.azulEscuro)
-                .frame(width: 150, height: 27)
+                .frame(width: width, height: 0.44 * totalHeight)
                 .background(
                     Gradient(colors: [.cinzaEscuroRecursoGrad,.azulClaro, .cinzaMedioRecursoGradiente, ])
                 )
-                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 8, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 8))
+                .clipShape(UnevenRoundedRectangle(topLeadingRadius: cornerRadius, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: cornerRadius))
 
             //linha divisora
             Rectangle()
-                .frame(width: 150, height: 2)
+                .frame(width: width, height: 0.009 * totalHeight)
                 .foregroundStyle(.black)
 
             Text("\(resource.totalInstances)")
-                .font(.system(size: 32))
+                .font(.system(size: 0.3 * totalHeight))
                 .bold()
                 .foregroundStyle(.azulEscuro)
-                .frame(width: 150, height: 58)
+                .frame(width: width, height: 0.56 * totalHeight)
                 .background(
                     Gradient(colors: [.azulClaro, .cinzaMedioRecursoGradiente, .cinzaEscuroRecursoGrad])
 
                 )
-                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 0, bottomLeadingRadius: 8, bottomTrailingRadius:8, topTrailingRadius: 0))
+                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 0, bottomLeadingRadius: cornerRadius, bottomTrailingRadius:cornerRadius, topTrailingRadius: 0))
         }
 
 
@@ -43,6 +53,6 @@ struct ResourceView: View {
 }
 
 #Preview {
-    ResourceView(resource: Resource(name: "Buffer de memória", id: 0, quantity: 5))
+    ResourceView(resource: Resource(name: "Buffer de memória", id: 500, quantity: 5000), width: 133, totalHeight: 104)
         .frame(width: 200, height: 200)
 }
