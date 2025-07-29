@@ -28,7 +28,7 @@ struct CreateProcessView: View {
                 Text("Identificador do processo:")
                     .font(.headline)
                 TextField("Ex: 2", text: $processID)
-                Text("Processo com o ID \(lastID!) já adicionado. Tente outro.")
+                Text("Processo com o ID \(lastID ?? "0") já adicionado. Tente outro.")
                     .opacity(isValid ? 0 : 1)
                     .font(.caption)
                     .foregroundStyle(.red)

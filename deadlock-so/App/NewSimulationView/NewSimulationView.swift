@@ -43,9 +43,32 @@ struct NewSimulationView: View {
                     .padding(.bottom)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
                     .padding(.leading, 24)
+                    HStack(spacing: 10) {
+                        Button {
+                            simulationVM.createProcess = true
+                        } label: {
+                            ButtonView(topText: "Criar", imageSymbol: "plus.circle", imageButton: "CriarProcessoImagem", proxy: proxy)
+                        }
+                        .buttonStyle(.plain)
+                        Button {
+                            simulationVM.removeProcessSheet = true
+                        } label: {
+                            ButtonView(topText: "Remover", imageSymbol: "minus.circle", imageButton: "RemoverProcessoImagem", proxy: proxy)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.bottom)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                    .padding(.trailing, 10)
                 }
             }
 
+        }
+        .sheet(isPresented: $simulationVM.createProcess) {
+            CreateProcessView(simulationVM: simulationVM)
+        }
+        .sheet(isPresented: $simulationVM.removeProcessSheet) {
+            RemoveProcessView(simulationVM: simulationVM)
         }
     }
 }
