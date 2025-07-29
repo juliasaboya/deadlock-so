@@ -65,7 +65,7 @@ struct CreateResourcesView: View {
                     Button {
                         if let newID = generateNextID() {
                             parameters.resources.append(Resource(name: resourceName, id: newID, quantity: Int(resourceInstances)!))
-                            print("Recurso adicionado com ID: \(newID)")
+//                            print("Recurso adicionado com ID: \(newID)")
                             resourceName = ""
                             resourceInstances = ""
                         } else {
@@ -76,7 +76,7 @@ struct CreateResourcesView: View {
                             .font(.headline)
                     }
                     .buttonStyle(.borderedProminent)
-                    .disabled(resourceName.isEmpty || Int(resourceInstances) == nil || Int(resourceInstances)! <= 0 || generateNextID() == nil)
+                    .disabled(resourceName.isEmpty || Int(resourceInstances) == nil || Int(resourceInstances)! <= 0 || generateNextID() == nil || parameters.resources.count == 10)
                     .keyboardShortcut(.defaultAction)
                 }
                 .padding()

@@ -36,7 +36,7 @@ struct RemoveProcessView: View {
             ToolbarItem(placement: .destructiveAction) {
                 Button("Remover") {
                     let processIndex = simulationVM.processes.firstIndex(where: { $0.id == processID })!
-                    print("id do processo sendo removido \(simulationVM.processes[processIndex].id)")
+//                    print("id do processo sendo removido \(simulationVM.processes[processIndex].id)")
                     simulationVM.removeProcess(simulationVM.processes[processIndex])
                     dismiss()
                 }
