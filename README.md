@@ -4,7 +4,7 @@ Projeto II – Detecção de Deadlocks
 
 Prof. Fernando Parente Garcia
 
-Equipe: Cauan Galdino, Júlia Saboya e Yane Lima.
+Equipe: Cauan Galdino, Júlia Saboya e Yane Santos.
 
 Objetivo: Detectar deadlocks utilizando o modelo matricial.
 Descrição: O projeto consiste de duas classes de threads: processos e sistema operacional.
