@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct CreateResourcesView: View {
-    @State var parameters = SimulationParameters(resources: [], deltaT: 5)
+    @State var parameters = SimulationParameters(resources: [], deltaT: 0)
     
     @State private var resourceName: String = ""
-    @State private var resourceID: String = ""
     @State private var resourceInstances: String = ""
+    @State private var interval: String = ""
     
     @State private var path = NavigationPath()
     
@@ -59,18 +59,18 @@ struct CreateResourcesView: View {
                             TextField("Ex: 2", text: Binding(
                                 get: { resourceInstances },
                                 set: { newValue in
-                                    // Mantém apenas dígitos (0–9)
                                     let filtered = newValue.filter { $0.isNumber }
                                     resourceInstances = filtered
                                 }
                             ))
                             .textFieldStyle(CustomTextFieldStyle())
+                            
+                            
                         }
                         
                         Button {
                             if let newID = generateNextID() {
                                 parameters.resources.append(Resource(name: resourceName, id: newID, quantity: Int(resourceInstances)!))
-                                //                            print("Recurso adicionado com ID: \(newID)")
                                 resourceName = ""
                                 resourceInstances = ""
                             } else {
@@ -83,23 +83,40 @@ struct CreateResourcesView: View {
                         .buttonStyle(.borderedProminent)
                         .disabled(resourceName.isEmpty || Int(resourceInstances) == nil || Int(resourceInstances)! <= 0 || generateNextID() == nil || parameters.resources.count == 10)
                         .keyboardShortcut(.defaultAction)
+                        
+                        Text("Intervalo de detecção de deadlocks (em segundos):")
+                            .font(.system(size: geometry.size.height/30))
+                        TextField("Ex: 2", text: Binding(
+                            get: { interval },
+                            set: { newValue in
+
+                                let filtered = newValue.filter { $0.isNumber }
+                                interval = filtered
+                            }
+                        ))
+                        .textFieldStyle(CustomTextFieldStyle())
+                        
+                        Button {
+                            parameters.deltaT = TimeInterval(Int(interval)!)
+                            path.append(parameters)
+                        } label: {
+                            Text("Continuar")
+                                .font(.system(size: geometry.size.height/30))
+                        }
+                        .padding([.bottom, .top], 10)
+                        .disabled(parameters.resources.isEmpty || interval == "")
                     }
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
                 .padding([.top, .leading, .trailing], 16)
-                Button {
-                    path.append(parameters)
-                } label: {
-                    Text("Continuar")
-                }
-                .padding([.bottom, .top], 10)
-                .disabled(parameters.resources.isEmpty)
+                
                 .navigationDestination(for: SimulationParameters.self) { parameters in
                     NewSimulationView(simulationVM: SimulationViewModel(parameters: parameters))
                 }
             }
         }
+        .toolbar(.hidden)
     }
 
     private func generateNextID() -> Int? {

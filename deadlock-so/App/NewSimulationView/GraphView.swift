@@ -20,12 +20,14 @@ struct GraphView: View {
     var rightResources: [Resource]
     var leftAvailable: [ResourceSemaphore]
     var rightAvailable: [ResourceSemaphore]
+    @ObservedObject var simulationVM: SimulationViewModel
 
 
-    init(resources: [Resource], availableResources: [ResourceSemaphore], processes: [ProcessThread]) {
-        self.resources = resources
-        self.availableResources = availableResources
-        self.processes = processes
+    init(/*resources: [Resource], availableResources: [ResourceSemaphore], processes: [ProcessThread]*/ simulationVM: SimulationViewModel) {
+        self.simulationVM = simulationVM
+        self.resources = simulationVM.resources
+        self.availableResources = simulationVM.availableResources
+        self.processes = simulationVM.processes
 
         let (leftResources, rightResources) = split(resources)
         let (leftAvailable, rightAvailable) = split(availableResources)
@@ -45,9 +47,10 @@ struct GraphView: View {
                     ForEach(Array(leftResources.enumerated()), id: \.offset) { index, resource in
                         ResourceView(
                             resource: resource,
-                            availableResources: [leftAvailable[index]],
+//                            availableResources: [leftAvailable[index]],
                             width: proxy.size.width * 0.15,
-                            totalHeight: proxy.size.height * 0.1
+                            totalHeight: proxy.size.height * 0.1,
+                            simulationVM: simulationVM
                         )
                     }
                 }
@@ -62,9 +65,10 @@ struct GraphView: View {
                     ForEach(Array(rightResources.enumerated()), id: \.offset) { index, resource in
                             ResourceView(
                                 resource: resource,
-                                availableResources: [rightAvailable[index]],
+//                                availableResources: [rightAvailable[index]],
                                 width: proxy.size.width * 0.15,
-                                totalHeight: proxy.size.height * 0.1
+                                totalHeight: proxy.size.height * 0.1,
+                                simulationVM: simulationVM
                             )
                         }
                 }

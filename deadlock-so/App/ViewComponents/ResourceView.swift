@@ -12,10 +12,13 @@ struct ResourceView: View {
     let width: CGFloat
     let totalHeight: CGFloat
     let cornerRadius: CGFloat
-    var availableResources: [ResourceSemaphore]
-    init(resource: Resource, availableResources: [ResourceSemaphore],width: CGFloat, totalHeight: CGFloat) {
+//    var availableResources: [ResourceSemaphore]
+    @ObservedObject var simulationVM: SimulationViewModel
+    
+    init(resource: Resource/*, availableResources: [ResourceSemaphore]*/,width: CGFloat, totalHeight: CGFloat, simulationVM: SimulationViewModel) {
+        self.simulationVM = simulationVM
         self.resource = resource
-        self.availableResources = availableResources
+//        self.availableResources = availableResources
         self.width = width
         self.totalHeight = totalHeight
         self.cornerRadius = 0.07 * totalHeight
@@ -38,7 +41,7 @@ struct ResourceView: View {
                 .frame(width: width, height: 0.009 * totalHeight)
                 .foregroundStyle(.black)
 
-            Text("\(resource.totalInstances)")
+            Text("\(simulationVM.availableResources[resource.id].count)")
                 .font(.system(size: 0.3 * totalHeight))
                 .bold()
                 .foregroundStyle(.azulEscuro)
@@ -54,7 +57,7 @@ struct ResourceView: View {
     }
 }
 
-#Preview {
-    ResourceView(resource: Resource(name: "Buffer de memória", id: 500, quantity: 5000), availableResources: [ResourceSemaphore(value: 1)], width: 133, totalHeight: 104)
-        .frame(width: 200, height: 200)
-}
+//#Preview {
+//    ResourceView(resource: Resource(name: "Buffer de memória", id: 500, quantity: 5000)/*, availableResources: [ResourceSemaphore(value: 1)]*/, width: 133, totalHeight: 104)
+//        .frame(width: 200, height: 200)
+//}

@@ -26,13 +26,12 @@ class OperatingSystem: Thread {
             Thread.sleep(forTimeInterval: 1)
             systemTime += 1
             if systemTime % Int(simulationVM.deltaT) == 0 {
-//                print("\(simulationVM.isDeadlocked = (detectDeadlocks() == [] ? false : true ))")
+                let ids = detectDeadlocks()
+                    .map({simulationVM.processes[$0].id})
                 DispatchQueue.main.sync { [unowned self] in
-                    simulationVM.logs.append(LogEntry(message: "[Sistema Operacional] Processos em DeadLock: \(detectDeadlocks())"))
+                    simulationVM.logs.append(LogEntry(message: "[Sistema Operacional] Processos em DeadLock: \(ids)"))
                     print("[Sistema Operacional] Processos em DeadLock: \(detectDeadlocks())")
                 }
-                
-//
             }
         }
     }
