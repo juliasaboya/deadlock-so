@@ -17,24 +17,12 @@ struct LogView: View {
     init(logs: [LogEntry], proxy: GeometryProxy) {
         self.logs = logs
         self.proxy = proxy
-//        simulationVM.logs = [
-//            LogEntry(message: "[Processo 1] Liberou recurso Buffer de memória"),
-//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
-//            LogEntry(message: "[Processo 1] Liberou recurso Buffer de memória"),
-//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
-//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
-//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
-//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
-//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
-//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
-//            LogEntry(message: "[Processo 1] Liberou recurso Impressora"),
-//        ]
     }
 
     var body: some View {
         VStack(alignment: .leading) {
             ScrollView {
-                ForEach(logs, id: \.self) { log in
+                ForEach(logs.reversed(), id: \.self) { log in
                     Text(log.message)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.system(size: proxy.size.height*0.0175))

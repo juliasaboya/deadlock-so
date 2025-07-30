@@ -12,7 +12,7 @@ struct SingleProcessView: View {
     var process: ProcessThread
     let circleDiameter: CGFloat
     var backgroundColor: Color {
-        if process.alive {
+        if process.isRunning {
             return .verdeProcessos
         }
         return .cinzaPadrao
@@ -33,11 +33,7 @@ struct SingleProcessView: View {
         .frame(width: circleDiameter, height: circleDiameter)
         .background(backgroundColor)
         .clipShape(Circle())
-        .dropLight(isOn: process.alive)
-//        .onChange(of: process.simulationVM.processesTimes[process.processIndex]) {
-//            print("internal time view: \(process.simulationVM.processesTimes[process.processIndex])")
-////            time = process.internalTime
-//        }
+        .dropLight(isOn: process.isRunning)
     }
 }
 

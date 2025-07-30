@@ -14,6 +14,7 @@ enum ProcessStatus {
 let mutexAR = DispatchSemaphore(value: 1)
 let mutexRR = DispatchSemaphore(value: 1)
 
+//@Observable
 class SimulationViewModel: ObservableObject {
     @Published var resources: [Resource] = []
     @Published var isSOCreated: Bool = true
@@ -31,8 +32,6 @@ class SimulationViewModel: ObservableObject {
     let deltaT: TimeInterval
     @Published var isDeadlocked = false
     
-    
-    
     init(parameters: SimulationParameters) {
         deltaT = parameters.deltaT
         
@@ -41,10 +40,6 @@ class SimulationViewModel: ObservableObject {
             self.existingResources.append(resource.totalInstances)
             self.availableResources.append(ResourceSemaphore(value: resource.totalInstances))
         }
-//        print("Existing: \(existingResources)")
-//        print("Allocated: \(allocatedResources)")
-//        print("Requested: \(requestedResources)")
-//        print("Available: \(availableResources.map(\.count))")
         
         let operatingSystem = OperatingSystem(simulationVM: self)
         operatingSystem.start()
@@ -84,10 +79,8 @@ class SimulationViewModel: ObservableObject {
                 let resource = resources.first(where: { $0.id == resourceId })!
                 
                 self.availableResources[resource.id].signal()
-//                print("[Process \(process.id)] Liberou recurso \(resource.name)")
                 logs.append(LogEntry(message: "[Process \(process.id)] Liberou recurso \(resource.name)"))
 
-//                print("Available: \(self.availableResources.map(\.count))")
                 logs.append(LogEntry(message: "Available: \(self.availableResources.map(\.count))"))
 
 
